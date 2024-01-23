@@ -1,0 +1,86 @@
+.top-title:hover + .hr-style {
+  width: 10%;
+  color: #008000;
+}
+
+.hr-style {
+  width: 5%;
+  margin: 0 auto 0 auto;
+  height: 2px;
+  transition: 0.3s;
+}
+
+#more-link {
+  text-decoration: none;
+  font-size: 20px;
+  color: #808080
+}
+#more-link:hover{
+  color: #0000ff;
+  text-decoration: underline
+}
+
+/* carousel */
+.carousel-inner > .carousel-item {
+  height: 500px;
+  cursor: pointer;
+}
+.carousel-inner > .carousel-item > img {
+  width: -webkit-fill-available;
+  height: -webkit-fill-available;
+}
+
+/* Card product */
+#productCard {
+  width: 90%;
+  border: none;
+  transition: 1s;
+}
+
+#productCard > .product-img {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+}
+
+#productCard > .product-img > img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+#productCard > .overlay {
+  width: 100%;
+  transition: 0.5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+#productCard:hover .product-img {
+  opacity: 0.3;
+}
+
+#productCard:hover .overlay {
+  opacity: 1;
+}
+/* Rating Star */
+.checked {
+  color: #ffff00;
+}
+
+#bottom-ad > div > img {
+  transition: transform .2s;
+}
+#bottom-ad > div > img:hover {
+  -ms-transform: scale(1.1); /* IE 9 */
+  -webkit-transform: scale(1.1); /* Safari 3-8 */
+  transform: scale(1.1);
+  cursor: pointer;
+}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng nhập</title>
+    <link href="/views/assets/login.css" rel="stylesheet" type="text/css" />
+    <%- include('../../partials/header.ejs') %>
+    <link rel="stylesheet" href="https://cdn.lineicons.com/2.0/LineIcons.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+          <div class="card border-0 shadow rounded-3 my-5">
+            <div class="card-body p-4 p-sm-5">
+              <h5 class="card-title text-center mb-5 fw-light fs-5 boild">
+                ĐĂNG NHẬP
+              </h5>
+              <form action="/auth/login" method="post">
+                <div class="form-floating mb-3">
+                  <input
+                    name="username"
+                    type="text"
+                    class="form-control"
+                    id="floatingInput"
+                    placeholder=""
+                    required
+                  />
+                  <label for="floatingInput">Tài khoản</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <input
+                    name="password"
+                    type="password"
+                    class="form-control"
+                    id="floatingPassword"
+                    placeholder=""
+                    required
+                  />
+                  <label for="floatingPassword">Mật khẩu</label>
+                </div>
+
+                <div class="form-check mb-3">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="rememberPasswordCheck"
+                  />
+                  <label class="form-check-label" for="rememberPasswordCheck">
+                    Ghi nhớ
+                  </label>
+                </div>
+                <div class="d-grid">
+                  <button
+                    class="btn btn-primary btn-login text-uppercase fw-bold"
+                    type="submit"
+                  >
+                    ĐĂNG NHẬP
+                  </button>
+                </div>
+                <% if(typeof msg !== "undefined"){ %>
+                  <div class="mb-3 col-md-12">
+                    <div class="badge bg-danger text-wrap" style="width: 100%">
+                      <%= msg %>
+                    </div>
+                  </div>
+                  <% } %>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

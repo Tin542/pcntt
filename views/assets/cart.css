@@ -1,0 +1,21 @@
+.table > :not(:first-child) {
+  border-top: 0;
+}
+#amount-button {
+  border-radius: 20px;
+  background-color: #00ffff;
+  border: 1px solid #000000;
+}
+#amount-button:hover {
+ opacity: 0.9;
+ border: 1px solid #000000
+}
+
+#amount{
+  border: 1px solid #000000;
+  width: 30%;
+  border-radius: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+

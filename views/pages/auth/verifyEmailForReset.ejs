@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đặt lại mật khẩu</title>
+    <%- include('../../partials/header.ejs') %>
+  </head>
+  <body>
+    <%- include('../../partials/navbar.ejs') %>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 offset-md-3">
+          <div class="reset-form">
+            <div class="mt-5 border p-4 bg-white shadow">
+              <h4 class="mb-5 text-secondary text-center">Đặt lại mật khẩu</h4>
+              <div class="row">
+                <div>
+                  <label>Email<span class="text-danger">*</span></label>
+
+                  <form
+                    method="post"
+                    action="/auth/sendOTP"
+                    class="d-flex mb-3 col-md-12"
+                  >
+                    <div class="col-md-8">
+                      <input
+                        type="email"
+                        name="email"
+                        class="form-control"
+                        required
+                      />
+                    </div>
+
+                    &nbsp; <button class="btn btn-primary">Gửi mã OTP</button>
+                  </form>
+                </div>
+                <% if(isShowed === true) { %>
+                <div>
+                  <label>Nhập mã OTP<span class="text-danger">*</span></label>
+
+                  <form
+                    method="post"
+                    action="/auth/verify-otp"
+                    class="d-flex mb-3 col-md-12"
+                  >
+                    <div class="col-md-8">
+                      <input
+                        type="text"
+                        name="otp"
+                        class="form-control"
+                        required
+                      />
+                    </div>
+
+                    &nbsp; <button class="btn btn-primary">Xác thực</button>
+                  </form>
+                </div>
+                <% } %> <% if(typeof msg !== "undefined"){ %>
+                <div class="mb-3 col-md-12">
+                  <div class="badge bg-danger text-wrap" style="width: 100%">
+                    <%= msg %>
+                  </div>
+                </div>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

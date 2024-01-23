@@ -1,0 +1,179 @@
+<div class="bg-light p-3">
+  <nav
+    style="
+      --bs-breadcrumb-divider: url(
+        &#34;data:image/svg + xml,
+        %3Csvgxmlns='http://www.w3.org/2000/svg'width='8'height='8'%3E%3Cpathd='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z'fill='currentColor'/%3E%3C/svg%3E&#34;
+      );
+    "
+    aria-label="breadcrumb"
+  >
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="/admin/order/list">Quản lí đơn hàng</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">
+        Chi tiết đơn hàng
+      </li>
+    </ol>
+  </nav>
+  <h3>CHI TIẾT ĐƠN HÀNG</h3>
+
+  <div class="container mt-3 p-3">
+    <div class="row mb-3">
+      <div class="col-sm-12">
+        <div class="card">
+          <h5 class="card-header bg-info text-white">Thông tin</h5>
+          <div class="card-body p-3">
+            <div class="row">
+              <div class="col lh-lg">
+                <div>
+                  <strong style="color: red">Mã đơn hàng:</strong> <%=
+                  orderDetail._id %>
+                </div>
+                <div>
+                  <strong>Khách hàng:</strong> <%= orderDetail.fullname %>
+                </div>
+                <div>
+                  <strong>Trạng thái đơn hàng: </strong>
+                  <% if(orderDetail.status === 'pending') { %>
+                  <span class="badge bg-warning">Đang xác thực</span>
+                  <% } %> <% if(orderDetail.status === 'approved') { %>
+                  <span class="badge bg-info">Đã xác thực</span>
+                  <% } %> <% if(orderDetail.status === 'rejected') { %>
+                  <span class="badge bg-danger">Đã hủy</span>
+                  <% } %> <% if(orderDetail.status === 'delivering') { %>
+                  <span class="badge bg-primary">Đang giao hàng</span>
+                  <% } %> <% if(orderDetail.status === 'success') { %>
+                  <span class="badge bg-success">Đã hoàn thành</span>
+                  <% } %>
+                </div>
+              </div>
+              <div class="col lh-lg">
+                <div>
+                  <strong>Số điện thoại:</strong> <%= orderDetail.phone %>
+                </div>
+                <div><strong>Địa chỉ:</strong> <%= orderDetail.address %></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="card p-3">
+          <table class="table table-borderless">
+            <thead class="table-info">
+              <tr class="text-center">
+                <th scope="col">#</th>
+                <th scope="col">Sản phẩm</th>
+                <th scope="col">Số lượng</th>
+                <th scope="col">Thành tiền</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% listProduct.forEach(function(item, index) { %>
+              <tr>
+                <th scope="row"><%= index+1 %></th>
+                <td class="d-flex">
+                  <img
+                    src="<%= item.productImg %>"
+                    height="60px"
+                    width="60px"
+                  />
+                  <div
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="right"
+                    title="Thám Tử Lừng Danh Conan - Tập 96"
+                    class="d-block"
+                  >
+                    <span
+                      class="d-inline-block text-truncate"
+                      style="max-width: 200px"
+                    >
+                      <%= item.productName %>
+                    </span>
+                    <div class="fw-bold"><%= item.productPrice %> $</div>
+                  </div>
+                </td>
+                <td class="text-center">
+                  <div class="fw-bold"><%= item.quantity %></div>
+                </td>
+                <td style="color: red" class="w-2 fw-bold text-center">
+                  <%= item.productPrice * item.quantity %> $
+                </td>
+              </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card w-100" style="height: auto">
+          <div class="card-header bg-danger text-white">
+            <div class="d-flex justify-content-between">
+              <h5>Thành tiền</h5>
+              <div><%= orderDetail.totalPrice %> $</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">
+              <div class="d-flex justify-content-between">
+                <div>Tổng số tiền (gồm VAT)</div>
+                <div class="text-danger"><%= orderDetail.totalPrice %> $</div>
+              </div>
+            </h5>
+            <hr />
+            <div>
+              <div>
+                <strong>Hình thức thanh toán: </strong><%=
+                orderDetail.paymentMethod %>
+              </div>
+              <div class="lh-lg">
+                <strong>Trạng thái thanh toán: </strong>
+                <% if(orderDetail.isPaid == false) { %>
+                <span class="badge bg-warning">Chờ thanh toán</span>
+                <% } %> <% if(orderDetail.isPaid == true) { %>
+                <span class="badge bg-success">Đã thanh toán</span>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card mt-3">
+          <h5 class="card-header bg-info text-white">Cập nhật trạng thái</h5>
+          <div class="card-body p-3">
+            <form action="/admin/order/update-status" method="post">
+              <div class="mb-3">
+                <label for="status" style="font-weight: 500;">Trạng thái đơn hàng: </label> 
+                <select id="status" name="status" class="form-select" aria-label="status select" placeholder="Trạng thái đơn hàng">
+                  <option hidden value="" <%= orderDetail.status==='' ? 'selected' : "" %>>Trạng thái đơn hàng</option>
+                  <option value="peding" <%= orderDetail.status==='pending' ? 'selected' : "" %>>Đang xác thực</option>
+                  <option value="approved" <%= orderDetail.status==='approved' ? 'selected' : "" %>>Đã xác thực</option>
+                  <option value="rejected" <%= orderDetail.status==='rejected' ? 'selected' : "" %>>Đã hủy</option>
+                  <option value="delivering" <%= orderDetail.status==='delivering' ? 'selected' : "" %>>Đang giao hàng</option>
+                  <option value="success" <%= orderDetail.status==='success' ? 'selected' : "" %>>Đã hoàn thành</option>
+                </select>             
+              </div>
+              <div>
+                <label for="paid" style="font-weight: 500;">Trạng thái thanh toán: </label>      
+                <select id="paid" name="isPaid" class="form-select" aria-label="payment status select">
+                  <option hidden value="" <%= orderDetail.isPaid==='' ? 'selected' : "" %>>Trạng thái thanh toán</option>
+                  <option value="true" <%= orderDetail.isPaid===true ? 'selected' : "" %>>Đã thanh toán</option>
+                  <option value="false" <%= orderDetail.isPaid===false ? 'selected' : "" %>>Chờ thanh toán</option>
+                </select>          
+              </div>
+              <input type="hidden" name="oid" value="<%= orderDetail._id %>"/>
+              <hr/>
+              <div class="d-grid gap-2">
+                <button class="btn btn-primary" type="submit">Cập nhật</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

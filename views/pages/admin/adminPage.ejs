@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin</title>
+
+    <link href="/views/assets/admin.css" rel="stylesheet" type="text/css" />
+    <%- include('../../partials/header.ejs') %>
+  </head>
+  <body>
+    <%- include('../../partials/admin/adminNavbar.ejs') %>
+    <div class="container-fluid">
+      <div class="row flex-nowrap">
+        <%- include('../../partials/admin/adminSidebar.ejs') %>
+        <div class="col bg-light" style="margin-left: 190px">
+          <% if(products) { %> <%- include('./productList.ejs') %> <% } %> <%
+          if(promotion) { %> <%- include('./promotionList.ejs') %> <% } %> <%
+          if(users) { %> <%- include('./userList.ejs') %> <% } %> <% if(staffs)
+          { %> <%- include('./staffList.ejs') %> <% } %> <% if (category){ %>
+          <%- include('./category.ejs') %> <% } %> <% if(orders) { %> <%-
+          include('./orderList.ejs') %> <% } %> <% if(dashboard) { %> <%-
+          include('./dashboard.ejs') %> <% } %> <% if(orderDetail){ %> <%-
+          include('./orderDetail.ejs') %> <% } %>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function cancelOrder(oid) {
+        $.ajax({
+          type: "POST",
+          data: {
+            orderId: oid,
+          },
+          url: `/admin/order/cancel`,
+          success: function (rs) {
+            alert("Hủy đơn hàng thành công");
+            window.location.reload();
+          },
+        });
+      }
+      function onClickResetPromotion() {
+        document.getElementById("scode").value = "";
+        document.getElementById("sname").value = "";
+        document.getElementById("status").value = "";
+      }
+      function onClickReset() {
+        document.getElementById("idSearch").value = "";
+        document.getElementById("status").value = "";
+        document.getElementById("paid").value = "";
+      }
+      function onClickResetProduct() {
+        document.getElementById("pName").value = "";
+        document.getElementById("category").value = "";
+        document.getElementById("star").value = "";
+      }
+      function onClickResetUser() {
+        document.getElementById("username").value = "";
+        document.getElementById("phone").value = "";
+        document.getElementById("email").value = "";
+      }
+      function resetPassword(id) {
+        $.ajax({
+          type: "POST",
+          url: `/reset-password`,
+          data: {
+            userId: id,
+          },
+          success: function (rs) {
+            alert("reset success");
+            window.location.reload();
+          },
+        });
+      }
+      function editUser(id) {
+        $.ajax({
+          type: "GET",
+          url: `/detail-user/${id}`,
+          success: function (rs) {
+            if (rs.s === 200) {
+              let data = rs.data[0];
+              // set data vừa get đc lên <input>
+              document.getElementById("idEdit").value = data.id;
+              document.getElementById("fullnameEdit").value = data.fullname;
+              document.getElementById("usernameEdit").value = data.username;
+              document.getElementById("emailEdit").value = data.email;
+              document.getElementById("phonenumberEdit").value =
+                data.phonenumber;
+            }
+          },
+        });
+      }
+      function editPromotion(id) {
+        console.log("id: ", id);
+        $.ajax({
+          type: "GET",
+          url: `/admin/promotion/detail/${id}`,
+          success: function (rs) {
+            if (rs.s === 200) {
+              let data = rs.data;
+              // set data vừa get đc lên <input>
+              document.getElementById("_idEdit").value = data._id;
+              document.getElementById("codeEdit").value = data.code;
+              document.getElementById("nameEdit").value = data.name;
+              document.getElementById("GiamGiaEdit").value = data.GiamGia;
+              document.getElementById("startDateEdit").value = data.startDate;
+              document.getElementById("endDateEdit").value = data.endDate;
+              document.getElementById("descEdit").value = data.desc;
+            }
+          },
+        });
+      }
+      function editcategory(id) {
+        $.ajax({
+          type: "GET",
+          url: `/admin/category/detail/${id}`,
+          success: function (rs) {
+            if (rs.s === 200) {
+              let data = rs.data;
+
+              // set data vừa get đc lên <input>
+              document.getElementById("nameEdit").value = data?.name;
+              document.getElementById("_idEdit").value = data?._id;
+            }
+          },
+        });
+      }
+      function deleteItem(id) {
+        $.ajax({
+          type: "DELETE",
+          url: `/admin/products/delete/${id}`,
+          success: function (rs) {
+            alert("delete success");
+            window.location.reload();
+          },
+        });
+      }
+      function deletecategory(id) {
+        $.ajax({
+          type: "DELETE",
+          url: `/admin/category/delete/${id}`,
+          success: function (rs) {
+            alert("delete success");
+            window.location.reload();
+          },
+        });
+      }
+      function deletePromotion(id) {
+        $.ajax({
+          type: "DELETE",
+          url: `/admin/promotion/delete/${id}`,
+          success: function (rs) {
+            alert("delete success");
+            window.location.reload();
+          },
+        });
+      }
+      function uploadImage() {
+        var fileInput = document.getElementById("image_file");
+        var file = fileInput.files[0];
+        if (!file) {
+          return alert("Vui lòng chọn ảnh");
+        }
+        var formData = new FormData();
+        formData.append("file", file);
+
+        $.ajax({
+          url: "/admin/products/upload-image",
+          type: "POST",
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function (response) {
+            document.getElementById("imageUpload").src = response.urlUploaded;
+            document.getElementById("imageUrl").value = response.urlUploaded;
+          },
+          error: function (xhr, status, error) {
+            // Xử lý lỗi
+          },
+        });
+      }
+      function uploadImageForEdit() {
+        var fileInput = document.getElementById("image_file_edit");
+        var file = fileInput.files[0];
+        if (!file) {
+          return alert("Vui lòng chọn ảnh");
+        }
+        var formData = new FormData();
+        formData.append("file", file);
+
+        $.ajax({
+          url: "/admin/products/upload-image",
+          type: "POST",
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function (response) {
+            document.getElementById("imageUploadEdit").src =
+              response.urlUploaded;
+            document.getElementById("imageUrlEdit").value =
+              response.urlUploaded;
+          },
+          error: function (xhr, status, error) {
+            // Xử lý lỗi
+          },
+        });
+      }
+    </script>
+  </body>
+</html>

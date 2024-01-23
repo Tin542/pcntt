@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trang chủ</title>
+
+    <link href="/views/assets/home.css" rel="stylesheet" type="text/css" />
+
+    <%- include('../partials/header.ejs') %>
+  </head>
+  <body>
+    <!-- navbar -->
+    <%- include('../partials/navbar.ejs') %>
+    <!-- Content -->
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Full Name</th>
+          <th scope="col">Username</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (var i = 0; i < listUser.length ; i++) { %>
+          <tr>
+            <th scope="row"><%= listUser[i].id %></th>
+            <td><%= listUser[i].fullname %></td>
+            <td><%= listUser[i].username %></td>
+            <td>@<%= listUser[i].status %></td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <!-- Footer -->
+    <%- include('../partials/footer.ejs') %>
+  </body>
+  <script>
+    function addToCart(pid) {
+      $.ajax({
+        url: `/cart/current/${pid}`,
+        type: "GET",
+        success: function (rs) {
+          if (rs.msg !== undefined) {
+            alert(rs.msg);
+          } else {
+            window.location.href = "/auth/login";
+          }
+        },
+      });
+    }
+    function getDetail(id) {
+      $.ajax({
+        type: "GET",
+        url: `/products/detail/${id}`,
+        success: function (rs) {
+          if (rs.s === 200) {
+            let data = rs.data;
+            // set data vừa get đc lên <input>
+            document.getElementById("_idEdit").value = data._id;
+            document.getElementById("nameEdit").value = data.name;
+            document.getElementById("priceEdit").value = data.price;
+            document.getElementById("rateEdit").value = data.rate;
+            document.getElementById("descriptionEdit").value = data.description;
+            document.getElementById("imageUrlEdit").value = data.imageUrl;
+            document.getElementById("imageUploadEdit").src = data.imageUrl;
+            document.getElementById("authorEdit").value = data.author;
+          }
+        },
+      });
+    }
+  </script>
+</html>

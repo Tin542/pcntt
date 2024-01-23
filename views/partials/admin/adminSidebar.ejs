@@ -1,0 +1,55 @@
+<!-- <div
+  class="d-flex flex-column flex-shrink-0 p-3 bg-white"
+  style="width: 200px"
+>
+  <div
+    class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100 mt-3"
+  >
+    <ul
+      class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start"
+      id="menu"
+    >
+      <li class="nav-item">
+        <a href="/admin/dashboard" class="nav-link align-middle px-0 text-dark">
+          <i class="bi bi-bar-chart-fill" style="font-size: 22px"></i>
+          <span class="ms-1 d-none d-sm-inline">Thống kê</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="/" class="nav-link px-0 align-middle text-dark">
+          <i class="fs-4 bi-people"></i>
+          <span class="ms-1 d-none d-sm-inline">Người dùng</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div> -->
+<div class="l-navbar bg-white border fixed-top" id="nav-bar" style="width: 200px">
+  <nav class="nav">
+    <div>
+      <a href="#" class="nav_logo">
+        <i class="bx bx-layer nav_logo-icon"></i>
+        <span class="nav_logo-name">PCNTT</span>
+      </a>
+      <hr/>
+      <div class="nav_list">
+        <% var isActived = path.includes('dashboard') ? 'active-nav' : '' %>
+        <a href="/dashboard" class="nav_link <%= isActived %>">
+          <i class="bi bi-bar-chart-fill" style=" font-size: 22px;"></i>
+          <span class="nav_name">Thống kê</span>
+        </a>
+        <% var isActived = path.includes('list-user') ? 'active-nav' : '' %>
+        <a href="/list-user" class="nav_link <%= isActived %>">
+          <i class="fs-4 bi-people"></i>
+          <span class="nav_name">Tài khoản</span>
+        </a>
+        
+      </div>
+    </div>
+  </nav>
+</div>
+<script
+    type="application/javascript"
+  src="../../js/admin.js"
+></script>
