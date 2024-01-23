@@ -11,18 +11,12 @@
   </head>
   <body>
     <%- include('../../partials/admin/adminNavbar.ejs') %>
-    <div class="container-fluid">
+    <div class="container-fluid height-100">
       <div class="row flex-nowrap">
         <%- include('../../partials/admin/adminSidebar.ejs') %>
         <div class="col bg-light" style="margin-left: 190px">
-          <% if(products) { %> <%- include('./productList.ejs') %> <% } %> <%
-          if(promotion) { %> <%- include('./promotionList.ejs') %> <% } %> <%
-          if(users) { %> <%- include('./userList.ejs') %> <% } %> <% if(staffs)
-          { %> <%- include('./staffList.ejs') %> <% } %> <% if (category){ %>
-          <%- include('./category.ejs') %> <% } %> <% if(orders) { %> <%-
-          include('./orderList.ejs') %> <% } %> <% if(dashboard) { %> <%-
-          include('./dashboard.ejs') %> <% } %> <% if(orderDetail){ %> <%-
-          include('./orderDetail.ejs') %> <% } %>
+          <% if(documentCome) { %> <%- include('./documentComeList.ejs') %> <% } %>
+          <% if(users) { %> <%- include('./userList.ejs') %> <% } %>
         </div>
       </div>
     </div>
@@ -69,7 +63,7 @@
             userId: id,
           },
           success: function (rs) {
-            alert("reset success");
+            alert("mật khẩu mới: 123456");
             window.location.reload();
           },
         });

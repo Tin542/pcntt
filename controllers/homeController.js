@@ -10,18 +10,14 @@ function HomeController() {
     dashboard: async (req, res) => {
       try {
         return res.render("pages/admin/adminPage", {
-          products: null,
-          category: null,
           users: null,
-          urlUploaded: null,
-          staffs: null,
-          promotion: null,
-          orders: null,
+          documentCome: null,
+          totalPage: 1,
+          currentPage: 1,
           dashboard: {
             listProduct: [],
             listCategory: [],
           },
-          orderDetail: null,
           path: pathname(req),
         });
       } catch (error) {
@@ -29,14 +25,14 @@ function HomeController() {
         res.status(500).json(error);
       }
     },
-    home: async (req, res) => {
+    user: async (req, res) => {
       try {
         let params = req.query;
         let username = params.username ? params.username : "";
         let email = params.email ? params.email : "";
         let phone = params.phone ? params.phone : "";
 
-        let ItemsPerPage = 5;
+        let ItemsPerPage = 10;
         let currentPage = params.page ? parseInt(params.page) : 1;
 
         const query = `SELECT * FROM USERS WHERE username like '%${username}%' and email like '%${email}%' and phonenumber like '%${phone}%' ORDER BY createdate DESC OFFSET ${
@@ -54,15 +50,8 @@ function HomeController() {
         db(req).close();
 
         return res.render("pages/admin/adminPage", {
-          products: null,
-          promotion: null,
-          category: null,
           users: result,
-          urlUploaded: null,
-          staffs: null,
-          orders: null,
-          dashboard: null,
-          orderDetail: null,
+          documentCome: null,
           totalPage: totalPage,
           currentPage: currentPage,
           filters: {
@@ -150,6 +139,52 @@ function HomeController() {
         if (result) {
           return res.redirect("/list-user");
         }
+      } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+      }
+    },
+    documentCome: async (req, res) => {
+      try {
+        let params = req.query;
+        let username = params.username ? params.username : "";
+        let email = params.email ? params.email : "";
+        let phone = params.phone ? params.phone : "";
+
+        let ItemsPerPage = 10;
+        let currentPage = params.page ? parseInt(params.page) : 1;
+
+        const query = `SELECT id, so_vb, ngay_tao, ma_dvb, nguoi_lh, dv_phat_hanh, nguoi_nhan, trang_thai FROM VAN_BAN WHERE loai_vb='CVDEN' ORDER BY createdate DESC OFFSET ${
+          (currentPage - 1) * 5
+        } ROWS FETCH NEXT ${ItemsPerPage} ROWS ONLY`;
+        const queryForPagination = `SELECT id, so_vb, ngay_tao, ma_dvb, nguoi_lh, dv_phat_hanh, nguoi_nhan, trang_thai FROM VAN_BAN WHERE loai_vb='CVDEN' ORDER BY createdate DESC`;
+
+        const result = (await db(req).query(query)).recordset;
+        const pagination = (await db(req).query(queryForPagination)).recordset;
+        let totalPage =
+          pagination.length % ItemsPerPage !== 0
+            ? Math.floor(pagination.length / ItemsPerPage) + 1
+            : pagination.length / ItemsPerPage;
+
+        db(req).close();
+
+        let listDocumentsCome = result.map((item) => {
+          item
+        })
+
+
+        return res.render("pages/admin/adminPage", {
+          users: null,
+          documentCome: listDocumentsCome,
+          totalPage: totalPage,
+          currentPage: currentPage,
+          filters: {
+            email: email,
+            username: username,
+            phone: phone,
+          },
+          path: pathname(req),
+        });
       } catch (error) {
         console.log(error);
         res.status(500).json(error);

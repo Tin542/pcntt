@@ -124,6 +124,8 @@ function AuthController() {
         }
         let session = req.session;
         session.uid = result[0].id;
+        session.username = result[0].username;
+        session.fullname = result[0].fullname;
         session.perid = result[0].perid;
         return res.redirect("/dashboard");
       } catch (error) {

@@ -1,0 +1,340 @@
+<div class="p-3 height-100">
+    <div class="card p-3 mb-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="me-auto p-2 bd-highlight"><h3>Danh sách văn bản đến</h3></div>
+        <div class="p-2">
+          <button
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#createModal"
+            type="button"
+          >
+            Thêm mới
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="card p-3 mb-3">
+      <form action="/list-user" method="get">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="p-2">
+            <input
+              id="username"
+              name="username"
+              type="text"
+              class="form-control"
+              placeholder="Tên tài khoản"
+              value="<%= filters.username %>"
+            />
+          </div>
+          <div class="p-2">
+            <input
+              id="email"
+              name="email"
+              type="text"
+              class="form-control"
+              placeholder="Email"
+              value="<%= filters.email %>"
+            />
+          </div>
+          <div class="p-2">
+            <input
+              id="phone"
+              name="phone"
+              type="text"
+              class="form-control"
+              placeholder="Phone number"
+              value="<%= filters.phone %>"
+            />
+          </div>
+          <div class="p-2">
+            <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              onclick="onClickResetUser()"
+            >
+              Reset
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <% if(documentCome.length > 0) { %>
+    <table class="table table-bordered bg-white mt-3">
+      <thead>
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Ngày tạo</th>
+          <th scope="col">Số văn bản</th>
+          <th scope="col">Loại văn bản</th>
+          <th scope="col">Đơn vị gửi</th>
+          <th scope="col">Người liên hệ</th>
+          <th scope="col">Người nhận</th>
+          <th scope="col">Trạng thái</th>
+          <!-- <th scope="col">Thao tác</th> -->
+        </tr>
+      </thead>
+      <tbody>
+        <% documentCome.forEach(function(item, index) { %>
+        <tr>
+          <th scope="row"><%= item.id %></th>
+          <td><%= item.ngay_tao %></td>
+          <td><%= item.so_vb %></td>
+          <td><%= item.ma_dvb %></td>
+          <td><%= item.dv_phat_hanh %></td>
+          <td><%= item.nguoi_lh %></td>
+          <td><%= item.nguoi_nhan %></td>
+          <td><%= item.trang_thai %></td>
+         
+          <td align="center">
+            <div class="d-grid gap-2 d-md-block">
+              <button
+                type="submit"
+                class="btn btn-outline-info btn-sm"
+                data-bs-toggle="modal"
+                data-bs-target="#editModal"
+               
+              >
+                <i class="bi bi-pencil-fill"></i>
+              </button>
+              <button
+                type="submit"
+                class="btn btn-outline-secondary btn-sm"
+                data-bs-toggle="tooltip"
+                data-bs-placement="right"
+                title="Reset password"
+               
+              >
+                <i class="bi bi-arrow-clockwise"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <%});%>
+      </tbody>
+    </table>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item">
+          <a class="page-link" href="#" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <% for(var i=1; i <= totalPage; i++) { %> <% var isActived = ( i ===
+        currentPage ) ? "active" : ""; %>
+        <li class="page-item <%= isActived %>">
+          <a class="page-link" href="/list-documentCome?page=<%= i %>"><%= i %></a>
+        </li>
+        <% }; %>
+        <li class="page-item">
+          <a class="page-link" href="#" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <% } else { %>
+    <div class="col-12">
+      <div class="card bg-light p-5">
+        <img
+          style="margin: auto"
+          width="200px"
+          height="200px"
+          src="https://cdn0.fahasa.com/skin//frontend/ma_vanese/fahasa/images/checkout_cart/ico_emptycart.svg"
+        />
+        <div class="fst-italic m-auto">
+          Không tìm thấy tài khoản phù hợp &#128517;
+        </div>
+      </div>
+    </div>
+    <% } %>
+    <div
+      class="modal fade"
+      id="createModal"
+      tabindex="-1"
+      aria-labelledby="createModal"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="createModal">Thêm tài khoản</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form class="row g-3" action="/create-user" method="post">
+              <div class="col-md-12">
+                <label for="name" class="form-label">Họ tên</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="fullname"
+                  name="fullname"
+                  placeholder="Nhập Họ tên"
+                  required
+                />
+              </div>
+              <div class="col-md-12">
+                <label for="username" class="form-label">Tên tài khoản</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="username"
+                  name="username"
+                  placeholder="Nhập Tên tài khoản"
+                  required
+                />
+              </div>
+              <div class="col-md-12">
+                <label for="email" class="form-label">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  name="email"
+                  placeholder="Nhập Email"
+                  required
+                />
+              </div>
+              <div class="col-md-12">
+                <label for="phonenumber" class="form-label">Số điện thoại</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="phonenumber"
+                  name="phonenumber"
+                  placeholder="Nhập Số điện thoại"
+                  required
+                />
+              </div>
+              <div class="col-md-12">
+                <label for="password" class="form-label">Mật khẩu</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password"
+                  name="password"
+                  placeholder="Nhập Mật khẩu"
+                  required
+                />
+              </div>
+  
+              <div class="col-12">
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Đóng
+                  </button>
+                  <button type="submit" class="btn btn-primary">Thêm</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="modal fade"
+      id="editModal"
+      tabindex="-1"
+      aria-labelledby="editModal"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editModal">Chỉnh sửa tài khoản</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form class="row g-3" action="/edit-user" method="post">
+              <input
+                type="hidden"
+                class="form-control"
+                id="idEdit"
+                name="idEdit"
+                value=""
+              />
+              <div class="col-md-12">
+                <label for="name" class="form-label">Họ tên</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="fullnameEdit"
+                  name="fullnameEdit"
+                  placeholder="Nhập Họ tên"
+                  value=""
+                  required
+                />
+              </div>
+              <div class="col-md-12">
+                <label for="username" class="form-label">Tên tài khoản</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="usernameEdit"
+                  name="usernameEdit"
+                  placeholder="Nhập Tên tài khoản"
+                  value=""
+                  required
+                />
+              </div>
+              <div class="col-md-12">
+                <label for="email" class="form-label">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="emailEdit"
+                  name="emailEdit"
+                  placeholder="Nhập Email"
+                  value=""
+                  required
+                />
+              </div>
+              <div class="col-md-12">
+                <label for="phonenumber" class="form-label">Số điện thoại</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="phonenumberEdit"
+                  name="phonenumberEdit"
+                  placeholder="Nhập Số điện thoại"
+                  value=""
+                  required
+                />
+              </div>
+  
+              <div class="col-12">
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Đóng
+                  </button>
+                  <button type="submit" class="btn btn-primary">Lưu</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
