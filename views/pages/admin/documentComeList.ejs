@@ -16,44 +16,68 @@
     </div>
   
     <div class="card p-3 mb-3">
-      <form action="/list-user" method="get">
+      <form action="/list-documentCome" method="get">
         <div class="d-flex justify-content-between align-items-center">
-          <div class="p-2">
+          <div style="width: 250px;" class="p-2">
             <input
-              id="username"
-              name="username"
+              id="soVb"
+              name="soVb"
               type="text"
               class="form-control"
-              placeholder="Tên tài khoản"
-              value="<%= filters.username %>"
-            />
+              placeholder="Số văn bản"
+              value="<%= filters.soVb %>"
+          />
           </div>
-          <div class="p-2">
-            <input
-              id="email"
-              name="email"
-              type="text"
-              class="form-control"
-              placeholder="Email"
-              value="<%= filters.email %>"
-            />
+          <div style="width: 250px;" class="p-2">
+            
+            <select id="loaivb" name="loaivb" class="form-select">
+              <option hidden value="">-Dạng Văn bản-</option>
+              <%
+              for ( var i = 0; i < listDocType.length; i++ )
+              {
+                  var selected = ( listDocType[i].ma_dvb === filters.loaivb ) ? "selected" : "";
+                  
+                  %><option value="<%= listDocType[i].ma_dvb %>" <%= selected %>><%= listDocType[i].ten_dvb %></option><%
+              }
+              %>
+              </select>
           </div>
-          <div class="p-2">
-            <input
-              id="phone"
-              name="phone"
-              type="text"
-              class="form-control"
-              placeholder="Phone number"
-              value="<%= filters.phone %>"
-            />
+          <div style="width: 250px;" class="p-2">
+            
+            <select id="donvi" name="donvi" class="form-select">
+              <label for="exampleDataList" class="form-label">Datalist example</label>
+              <option hidden value="">-Đơn vị-</option>
+              <%
+              for ( var i = 0; i < listDepartment.length; i++ )
+              {
+                  var selected = ( listDepartment[i].ma_dv === filters.donvi ) ? "selected" : "";
+                  
+                  %><option value="<%= listDepartment[i].ma_dv %>" <%= selected %>><%= listDepartment[i].ten_dv %></option><%
+              }
+              %>
+              </select>
+          </div>
+          
+          <div style="width: 250px;" class="p-2">
+            
+            <select id="trangthai" name="trangthai" class="form-select">
+              <option hidden value="">-Trạng thái-</option>
+              <%
+              for ( var i = 0; i < listStatus.length; i++ )
+              {
+                  var selected = ( listStatus[i].ma_tt === filters.trangthai ) ? "selected" : "";
+                  
+                  %><option value="<%= listStatus[i].ma_tt %>" <%= selected %>><%= listStatus[i].ten_tt %></option><%
+              }
+              %>
+              </select>
           </div>
           <div class="p-2">
             <button class="btn btn-primary" type="submit">Tìm kiếm</button>
             <button
               type="button"
               class="btn btn-outline-secondary"
-              onclick="onClickResetUser()"
+              onclick="onClickResetDocumentCome()"
             >
               Reset
             </button>
@@ -82,8 +106,8 @@
           <th scope="row"><%= item.id %></th>
           <td><%= item.ngay_tao %></td>
           <td><%= item.so_vb %></td>
-          <td><%= item.ma_dvb %></td>
-          <td><%= item.dv_phat_hanh %></td>
+          <td><%= item.dangVB %></td>
+          <td><%= item.donvi %></td>
           <td><%= item.nguoi_lh %></td>
           <td><%= item.nguoi_nhan %></td>
           <td><%= item.trang_thai %></td>
@@ -145,7 +169,7 @@
           src="https://cdn0.fahasa.com/skin//frontend/ma_vanese/fahasa/images/checkout_cart/ico_emptycart.svg"
         />
         <div class="fst-italic m-auto">
-          Không tìm thấy tài khoản phù hợp &#128517;
+          Không tìm thấy kết quả phù hợp &#128517;
         </div>
       </div>
     </div>
@@ -337,4 +361,4 @@
       </div>
     </div>
   </div>
-  
+ 

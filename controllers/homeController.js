@@ -1,11 +1,32 @@
 "use strict";
 const moment = require("moment");
-const sha256 = require('js-sha256');
+const sha256 = require("js-sha256");
+const { elements } = require("chart.js");
 require("dotenv").config();
 
 function HomeController() {
   const db = (req) => req.app.locals.db.pcntt;
   const pathname = (req) => (req.app.locals.pathname = req.path);
+  moment.locale('vi'); 
+
+  // Lay tat ca don vi
+  const listDepartment = async (req) => {
+    const DVQuery = `SELECT ma_dv, ten_dv FROM DON_VI WHERE status = 'True'`
+    return (await db(req).query(DVQuery)).recordset;
+  }
+
+  // Lay tat ca dang van ban
+  const listDocType = async (req) => {
+    const LVBQuery = `SELECT ma_dvb, ten_dvb FROM DANG_VB WHERE status = 'True'`
+    return (await db(req).query(LVBQuery)).recordset;
+  }
+
+  // Lay tat ca trang thai
+  const listStatus = async (req) => {
+    const TTQuery = `SELECT ma_tt, ten_tt FROM TRANG_THAI WHERE status = 'True'`
+    return (await db(req).query(TTQuery)).recordset;
+  }
+  
   return {
     dashboard: async (req, res) => {
       try {
@@ -71,21 +92,21 @@ function HomeController() {
         let createValue = req.body;
         const enCryptedPassword = sha256(createValue?.password);
         const query = `INSERT INTO USERS (fullname, username, email, phonenumber, password, perid, status, createdate) VALUES (@Fullname, @Username, @Email, @Phonenumber, @Password, @Perid, @Status, @CreateDate)`;
-          const inputs = [
-            { name: "Fullname", value: createValue.fullname },
-            { name: "Username", value: createValue.username },
-            { name: "Email", value: createValue.email },
-            { name: "Phonenumber", value: createValue.phonenumber },
-            { name: "Password", value: enCryptedPassword },
-            { name: "Perid", value: 1 },
-            { name: "Status", value: true },
-            { name: "CreateDate", value: new Date() },
-          ];
-          const result = (await db(req).query(query, inputs)).rowsAffected;
-          if (result) {
-            res.redirect("/list-user");
-          }
-          db(req).close();
+        const inputs = [
+          { name: "Fullname", value: createValue.fullname },
+          { name: "Username", value: createValue.username },
+          { name: "Email", value: createValue.email },
+          { name: "Phonenumber", value: createValue.phonenumber },
+          { name: "Password", value: enCryptedPassword },
+          { name: "Perid", value: 1 },
+          { name: "Status", value: true },
+          { name: "CreateDate", value: new Date() },
+        ];
+        const result = (await db(req).query(query, inputs)).rowsAffected;
+        if (result) {
+          res.redirect("/list-user");
+        }
+        db(req).close();
       } catch (error) {
         console.log(error);
         res.status(500).json(error);
@@ -132,8 +153,8 @@ function HomeController() {
         const password = sha256(process.env.DEFAULT_PASSWORD);
         const query = `UPDATE USERS SET password = @Password WHERE id = @Id`;
         const inputs = [
-          {name: 'Password', value: password},
-          {name: 'Id', value: uid}
+          { name: "Password", value: password },
+          { name: "Id", value: uid },
         ];
         const result = (await db(req).query(query, inputs)).rowsAffected;
         if (result) {
@@ -147,18 +168,23 @@ function HomeController() {
     documentCome: async (req, res) => {
       try {
         let params = req.query;
-        let username = params.username ? params.username : "";
-        let email = params.email ? params.email : "";
-        let phone = params.phone ? params.phone : "";
+        let soVb = params.soVb ? params.soVb : "";
+        let loaivb = params.loaivb ? params.loaivb : "";
+        let donvi = params.donvi ? params.donvi : "";
+        let trangthai = params.trangthai ? params.trangthai : "";
 
         let ItemsPerPage = 10;
         let currentPage = params.page ? parseInt(params.page) : 1;
 
-        const query = `SELECT id, so_vb, ngay_tao, ma_dvb, nguoi_lh, dv_phat_hanh, nguoi_nhan, trang_thai FROM VAN_BAN WHERE loai_vb='CVDEN' ORDER BY createdate DESC OFFSET ${
+        let resultDV = await listDepartment(req);
+        let resultLVB = await listDocType(req);
+        let resultTT = await listStatus(req);
+
+        // lay Tat ca van ban den
+        const query = `SELECT id, so_vb, ngay_tao, ma_dvb, nguoi_lh, dv_phat_hanh, nguoi_nhan, trang_thai FROM VAN_BAN WHERE so_vb like '%${soVb}%' and loai_vb='CVDEN' and ma_dvb like '%${loaivb}%' and dv_phat_hanh like '%${donvi}%' and trang_thai like '%${trangthai}%' ORDER BY createdate DESC OFFSET ${
           (currentPage - 1) * 5
         } ROWS FETCH NEXT ${ItemsPerPage} ROWS ONLY`;
-        const queryForPagination = `SELECT id, so_vb, ngay_tao, ma_dvb, nguoi_lh, dv_phat_hanh, nguoi_nhan, trang_thai FROM VAN_BAN WHERE loai_vb='CVDEN' ORDER BY createdate DESC`;
-
+        const queryForPagination = `SELECT id, so_vb, ngay_tao, ma_dvb, nguoi_lh, dv_phat_hanh, nguoi_nhan, trang_thai FROM VAN_BAN WHERE so_vb like '%${soVb}%' and loai_vb='CVDEN' and ma_dvb like '%${loaivb}%' and dv_phat_hanh like '%${donvi}%' and trang_thai like '%${trangthai}%' ORDER BY createdate DESC`;
         const result = (await db(req).query(query)).recordset;
         const pagination = (await db(req).query(queryForPagination)).recordset;
         let totalPage =
@@ -166,22 +192,30 @@ function HomeController() {
             ? Math.floor(pagination.length / ItemsPerPage) + 1
             : pagination.length / ItemsPerPage;
 
+        
+
+        result.forEach((e) => {
+          e.ngay_tao = moment(e.ngay_tao).format('LL');
+          e.donvi = resultDV.find((element) => element.ma_dv === e.dv_phat_hanh).ten_dv;
+          e.dangVB = resultLVB.find((element) => element.ma_dvb === e.ma_dvb).ten_dvb;
+          e.trang_thai = resultTT.find((element) => element.ma_tt === e.trang_thai).ten_tt;
+        });
+
         db(req).close();
-
-        let listDocumentsCome = result.map((item) => {
-          item
-        })
-
 
         return res.render("pages/admin/adminPage", {
           users: null,
-          documentCome: listDocumentsCome,
+          documentCome: result,
           totalPage: totalPage,
           currentPage: currentPage,
+          listDepartment: resultDV,
+          listDocType: resultLVB,
+          listStatus: resultTT,
           filters: {
-            email: email,
-            username: username,
-            phone: phone,
+            soVb: soVb,
+            loaivb: loaivb,
+            donvi: donvi,
+            trangthai: trangthai,
           },
           path: pathname(req),
         });
@@ -189,7 +223,7 @@ function HomeController() {
         console.log(error);
         res.status(500).json(error);
       }
-    }
+    },
   };
 }
 
