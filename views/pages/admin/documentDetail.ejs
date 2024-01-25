@@ -1,93 +1,40 @@
 <div class="p-3">
-    <nav
-    style="
-      --bs-breadcrumb-divider: url(
-        &#34;data:image/svg + xml,
-        %3Csvgxmlns='http://www.w3.org/2000/svg'width='8'height='8'%3E%3Cpathd='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z'fill='currentColor'/%3E%3C/svg%3E&#34;
-      );
-    "
-    aria-label="breadcrumb"
-  >
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item">
-        <a href="/list-documentCome">Danh sách văn bản</a>
-      </li>
-      <li class="breadcrumb-item active" aria-current="page">
-        Chi tiết Văn bản
-      </li>
-    </ol>
-  </nav>
+  <div class="card p-3 mb-3">
     <h3>CHI TIẾT VĂN BẢN</h3>
-  
-    <div class="container mt-3 p-3">
-      <div class="row mb-3">
-        <div class="col-sm-12">
-          <div class="card">
-            <h5 class="card-header bg-info text-white">Thông tin</h5>
-            <div class="card-body p-3">
-              <div class="row">
-                <div class="col lh-lg">
-                  <div>
-                    <strong style="color: red">Mã đơn hàng:</strong> 
-                  </div>
-                  <div>
-                    <strong>Khách hàng:</strong> 
-                  </div>
-                  <div>
-                    <strong>Trạng thái đơn hàng: </strong>
-                    
-                  </div>
-                </div>
-                <div class="col lh-lg">
-                  <div>
-                    <strong>Số điện thoại:</strong> 
-                  </div>
-                  <div><strong>Địa chỉ:</strong> </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <div class="card p-3">
-          </div>
-        </div>
-        <div class="col">
-          <div class="card w-100" style="height: auto">
-            <div class="card-header bg-danger text-white">
-              <div class="d-flex justify-content-between">
-                <h5>Thành tiền</h5>
-                <div></div>
-              </div>
-            </div>
-            <div class="card-body">
-              <h5 class="card-title">
-                <div class="d-flex justify-content-between">
-                  <div>Tổng số tiền (gồm VAT)</div>
-                  <div class="text-danger"></div>
-                </div>
-              </h5>
-              <hr />
-              <div>
-                <div>
-                  <strong>Hình thức thanh toán: </strong>
-                 
-                </div>
-                <div class="lh-lg">
-                  <strong>Trạng thái thanh toán: </strong>
-                 
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card mt-3">
-            <h5 class="card-header bg-info text-white">Cập nhật trạng thái</h5>
-           
-          </div>
-        </div>
-      </div>
-    </div>
+    <nav
+      style="
+        --bs-breadcrumb-divider: url(
+          &#34;data:image/svg + xml,
+          %3Csvgxmlns='http://www.w3.org/2000/svg'width='8'height='8'%3E%3Cpathd='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z'fill='currentColor'/%3E%3C/svg%3E&#34;
+        );
+      "
+      aria-label="breadcrumb"
+    >
+      <ol class="breadcrumb" style="font-size: small">
+        <li class="breadcrumb-item">
+          <a href="/list-documentCome">Danh sách văn bản</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+          Chi tiết Văn bản
+        </li>
+      </ol>
+    </nav>
   </div>
-  
+
+  <div class="card p-3 mb-3">
+    <span> <strong>Số văn bản: </strong> <%= detailDocument.so_vb %> </span>
+    <span> <strong>Ngày tạo: </strong> <%= detailDocument.ngay_tao %> </span>
+    <span> <strong>Loại văn bản: </strong> <%= detailDocument.loai_vb %> </span>
+    <span> <strong>Dạng văn bản: </strong> <%= detailDocument.ma_dvb %> </span>
+    <span> <strong>Đơn vị gửi: </strong> <%= detailDocument.dv_phat_hanh %> </span>
+    <span> <strong>người liên hệ: </strong> <%= detailDocument.nguoi_lh %> </span>
+    <span> <strong>Người nhận văn bản: </strong> <%= detailDocument.nguoi_nhan %> </span>
+    <span> <strong>Người ký văn bản: </strong> <%= detailDocument.nguoi_ky_vb %> </span>
+    <span> <strong>Trạng thái văn bản: </strong> <%= detailDocument.trang_thai %> </span>
+    <span> <strong>Ghi chú: </strong> <%= detailDocument.ghi_chu %> </span>
+    <span> <strong>File: </strong> <%= detailDocument.file_name %> </span>
+  </div>
+</div>
+<div class="card p-3 mb-3">
+  <iframe src="<%= detailDocument.file_name %>" style="width:600px; height:500px;" frameborder="0"></iframe>
+</div>
