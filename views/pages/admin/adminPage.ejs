@@ -7,16 +7,19 @@
     <title>Admin</title>
 
     <link href="/views/assets/admin.css" rel="stylesheet" type="text/css" />
+    <link href="/views/assets/footer.css" rel="stylesheet" type="text/css" />
     <%- include('../../partials/header.ejs') %>
+    
   </head>
   <body>
     <%- include('../../partials/admin/adminNavbar.ejs') %>
-    <div class="container-fluid height-100">
+    <div class="container-fluid">
       <div class="row flex-nowrap">
         <%- include('../../partials/admin/adminSidebar.ejs') %>
         <div class="col bg-light" style="margin-left: 190px">
           <% if(documentCome) { %> <%- include('./documentComeList.ejs') %> <% } %>
           <% if(users) { %> <%- include('./userList.ejs') %> <% } %>
+          <% if(detailDocument) { %> <%- include('./documentDetail.ejs') %> <% } %>
         </div>
       </div>
     </div>

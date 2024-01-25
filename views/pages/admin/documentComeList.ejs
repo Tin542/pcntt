@@ -1,5 +1,5 @@
-<div class="p-3 height-100">
-    <div class="card p-3 mb-3">
+<div class="p-3">
+    <div class="card p-3 mb-3 d-block">
       <div class="d-flex justify-content-between align-items-center">
         <div class="me-auto p-2 bd-highlight"><h3>Danh sách văn bản đến</h3></div>
         <div class="p-2">
@@ -15,7 +15,7 @@
       </div>
     </div>
   
-    <div class="card p-3 mb-3">
+    <div class="card p-3 mb-3 d-block">
       <form action="/list-documentCome" method="get">
         <div class="d-flex justify-content-between align-items-center">
           <div style="width: 250px;" class="p-2">
@@ -114,6 +114,15 @@
          
           <td align="center">
             <div class="d-grid gap-2 d-md-block">
+            <a
+              class="btn btn-outline-info btn-sm"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Chi tiết văn bản"
+              href='/detail-documentCome/<%= item.id %>'
+            >
+              <i class="bi bi-eye"></i>
+            </a>
               <button
                 type="submit"
                 class="btn btn-outline-info btn-sm"
@@ -123,16 +132,7 @@
               >
                 <i class="bi bi-pencil-fill"></i>
               </button>
-              <button
-                type="submit"
-                class="btn btn-outline-secondary btn-sm"
-                data-bs-toggle="tooltip"
-                data-bs-placement="right"
-                title="Reset password"
-               
-              >
-                <i class="bi bi-arrow-clockwise"></i>
-              </button>
+
             </div>
           </td>
         </tr>
@@ -166,7 +166,7 @@
           style="margin: auto"
           width="200px"
           height="200px"
-          src="https://cdn0.fahasa.com/skin//frontend/ma_vanese/fahasa/images/checkout_cart/ico_emptycart.svg"
+          src="https://cdni.iconscout.com/illustration/premium/thumb/not-found-4064375-3363936.png"
         />
         <div class="fst-italic m-auto">
           Không tìm thấy kết quả phù hợp &#128517;
@@ -361,4 +361,6 @@
       </div>
     </div>
   </div>
+  
+
  

@@ -14,4 +14,5 @@ router.post('/edit-user', homeController.editUser);
 router.post('/reset-password', homeController.resetPassword);
 
 router.get('/list-documentCome', homeController.documentCome);
+router.get('/detail-documentCome/:id', homeController.detailDocumentCome);
 module.exports = router;

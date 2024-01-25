@@ -33,6 +33,7 @@ function HomeController() {
         return res.render("pages/admin/adminPage", {
           users: null,
           documentCome: null,
+          detailDocument: null,
           totalPage: 1,
           currentPage: 1,
           dashboard: {
@@ -80,6 +81,7 @@ function HomeController() {
             username: username,
             phone: phone,
           },
+          detailDocument: null,
           path: pathname(req),
         });
       } catch (error) {
@@ -217,6 +219,7 @@ function HomeController() {
             donvi: donvi,
             trangthai: trangthai,
           },
+          detailDocument: null,
           path: pathname(req),
         });
       } catch (error) {
@@ -224,6 +227,31 @@ function HomeController() {
         res.status(500).json(error);
       }
     },
+    detailDocumentCome: async (req, res) => {
+      try {
+        let did = req.params.id;
+
+        let resultDV = await listDepartment(req);
+        let resultLVB = await listDocType(req);
+        let resultTT = await listStatus(req);
+
+        const query = "SELECT * FROM VAN_BAN WHERE id = @Id";
+        const inputs = [{ name: "Id", value: parseInt(did) }];
+        const result = (await db(req).query(query, inputs)).recordset;
+        return res.render("pages/admin/adminPage", {
+          users: null,
+          documentCome: null,
+          listDepartment: resultDV,
+          listDocType: resultLVB,
+          listStatus: resultTT,
+          detailDocument: result[0],
+          path: pathname(req),
+        });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+      }
+    }
   };
 }
 
