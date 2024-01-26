@@ -7,32 +7,33 @@ require("dotenv").config();
 function HomeController() {
   const db = (req) => req.app.locals.db.pcntt;
   const pathname = (req) => (req.app.locals.pathname = req.path);
-  moment.locale('vi'); 
+  moment.locale("vi");
 
   // Lay tat ca don vi
   const listDepartment = async (req) => {
-    const DVQuery = `SELECT ma_dv, ten_dv FROM DON_VI WHERE status = 'True'`
+    const DVQuery = `SELECT ma_dv, ten_dv FROM DON_VI WHERE status = 'True'`;
     return (await db(req).query(DVQuery)).recordset;
-  }
+  };
 
   // Lay tat ca dang van ban
   const listDocType = async (req) => {
-    const LVBQuery = `SELECT ma_dvb, ten_dvb FROM DANG_VB WHERE status = 'True'`
+    const LVBQuery = `SELECT ma_dvb, ten_dvb FROM DANG_VB WHERE status = 'True'`;
     return (await db(req).query(LVBQuery)).recordset;
-  }
+  };
 
   // Lay tat ca trang thai
   const listStatus = async (req) => {
-    const TTQuery = `SELECT ma_tt, ten_tt FROM TRANG_THAI WHERE status = 'True'`
+    const TTQuery = `SELECT ma_tt, ten_tt FROM TRANG_THAI WHERE status = 'True'`;
     return (await db(req).query(TTQuery)).recordset;
-  }
-  
+  };
+
   return {
     dashboard: async (req, res) => {
       try {
         return res.render("pages/admin/adminPage", {
           users: null,
           documentCome: null,
+          documentGo: null,
           detailDocument: null,
           totalPage: 1,
           currentPage: 1,
@@ -74,6 +75,7 @@ function HomeController() {
         return res.render("pages/admin/adminPage", {
           users: result,
           documentCome: null,
+          documentGo: null,
           totalPage: totalPage,
           currentPage: currentPage,
           filters: {
@@ -194,13 +196,17 @@ function HomeController() {
             ? Math.floor(pagination.length / ItemsPerPage) + 1
             : pagination.length / ItemsPerPage;
 
-        
-
         result.forEach((e) => {
-          e.ngay_tao = moment(e.ngay_tao).format('LL');
-          e.donvi = resultDV.find((element) => element.ma_dv === e.dv_phat_hanh).ten_dv;
-          e.dangVB = resultLVB.find((element) => element.ma_dvb === e.ma_dvb).ten_dvb;
-          e.trang_thai = resultTT.find((element) => element.ma_tt === e.trang_thai).ten_tt;
+          e.ngay_tao = moment(e.ngay_tao).format("LL");
+          e.donvi = resultDV.find(
+            (element) => element.ma_dv === e.dv_phat_hanh
+          ).ten_dv;
+          e.dangVB = resultLVB.find(
+            (element) => element.ma_dvb === e.ma_dvb
+          ).ten_dvb;
+          e.trang_thai = resultTT.find(
+            (element) => element.ma_tt === e.trang_thai
+          ).ten_tt;
         });
 
         db(req).close();
@@ -208,6 +214,7 @@ function HomeController() {
         return res.render("pages/admin/adminPage", {
           users: null,
           documentCome: result,
+          documentGo: null,
           totalPage: totalPage,
           currentPage: currentPage,
           listDepartment: resultDV,
@@ -241,6 +248,7 @@ function HomeController() {
         return res.render("pages/admin/adminPage", {
           users: null,
           documentCome: null,
+          docuemtnGo: null,
           listDepartment: resultDV,
           listDocType: resultLVB,
           listStatus: resultTT,
@@ -251,7 +259,72 @@ function HomeController() {
         console.log(error);
         res.status(500).json(error);
       }
-    }
+    },
+    documentGo: async (req, res) => {
+      try {
+        let params = req.query;
+        let soVb = params.soVb ? params.soVb : "";
+        let loaivb = params.loaivb ? params.loaivb : "";
+        let donvi = params.donvi ? params.donvi : "";
+        let trangthai = params.trangthai ? params.trangthai : "";
+
+        let ItemsPerPage = 10;
+        let currentPage = params.page ? parseInt(params.page) : 1;
+
+        let resultDV = await listDepartment(req);
+        let resultLVB = await listDocType(req);
+        let resultTT = await listStatus(req);
+
+        // lay Tat ca van ban den
+        const query = `SELECT id, so_vb, ngay_tao, ma_dvb, nguoi_lh, dv_nhan, nguoi_nhan, trang_thai FROM VAN_BAN WHERE so_vb like '%${soVb}%' and loai_vb='CVDI' and ma_dvb like '%${loaivb}%' and dv_nhan like '%${donvi}%' and trang_thai like '%${trangthai}%' ORDER BY createdate DESC OFFSET ${
+          (currentPage - 1) * 5
+        } ROWS FETCH NEXT ${ItemsPerPage} ROWS ONLY`;
+        const queryForPagination = `SELECT id, so_vb, ngay_tao, ma_dvb, nguoi_lh, dv_nhan, nguoi_nhan, trang_thai FROM VAN_BAN WHERE so_vb like '%${soVb}%' and loai_vb='CVDI' and ma_dvb like '%${loaivb}%' and dv_nhan like '%${donvi}%' and trang_thai like '%${trangthai}%' ORDER BY createdate DESC`;
+        const result = (await db(req).query(query)).recordset;
+        const pagination = (await db(req).query(queryForPagination)).recordset;
+        let totalPage =
+          pagination.length % ItemsPerPage !== 0
+            ? Math.floor(pagination.length / ItemsPerPage) + 1
+            : pagination.length / ItemsPerPage;
+
+        result.forEach((e) => {
+          e.ngay_tao = moment(e.ngay_tao).format("LL");
+          e.donvi = resultDV.find(
+            (element) => element.ma_dv === e.dv_nhan
+          ).ten_dv;
+          e.dangVB = resultLVB.find(
+            (element) => element.ma_dvb === e.ma_dvb
+          ).ten_dvb;
+          e.trang_thai = resultTT.find(
+            (element) => element.ma_tt === e.trang_thai
+          ).ten_tt;
+        });
+
+        db(req).close();
+
+        return res.render("pages/admin/adminPage", {
+          users: null,
+          documentCome: null,
+          documentGo: result,
+          totalPage: totalPage,
+          currentPage: currentPage,
+          listDepartment: resultDV,
+          listDocType: resultLVB,
+          listStatus: resultTT,
+          filters: {
+            soVb: soVb,
+            loaivb: loaivb,
+            donvi: donvi,
+            trangthai: trangthai,
+          },
+          detailDocument: null,
+          path: pathname(req),
+        });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+      }
+    },
   };
 }
 

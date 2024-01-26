@@ -4,6 +4,8 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 require('dotenv').config();
 const sessions = require("express-session");
+const path = require('path');
+
 
 const getDataConfig = require('./database/data.config');
 const { dataAccess } = require('./database/data.access');
@@ -26,6 +28,7 @@ app.use(
 );
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
+app.use(express.static(path.join(__dirname, 'public')));
 app.locals.db = {
   pcntt: dataAccess(dataConfig.pcntt),
 }

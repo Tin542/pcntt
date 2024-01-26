@@ -46,7 +46,7 @@
             
             <select id="donvi" name="donvi" class="form-select">
               <label for="exampleDataList" class="form-label">Datalist example</label>
-              <option hidden value="">-Đơn vị-</option>
+              <option hidden value="">-Đơn vị gửi-</option>
               <%
               for ( var i = 0; i < listDepartment.length; i++ )
               {
@@ -184,7 +184,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="createModal">Thêm tài khoản</h5>
+            <h5 class="modal-title" id="createModal">Thêm Van ban</h5>
             <button
               type="button"
               class="btn-close"
@@ -193,9 +193,9 @@
             ></button>
           </div>
           <div class="modal-body">
-            <form class="row g-3" action="/create-user" method="post">
+            <form class="row g-3" action="/" method="post">
               <div class="col-md-12">
-                <label for="name" class="form-label">Họ tên</label>
+              
                 <input
                   type="text"
                   class="form-control"
@@ -206,7 +206,7 @@
                 />
               </div>
               <div class="col-md-12">
-                <label for="username" class="form-label">Tên tài khoản</label>
+               
                 <input
                   type="text"
                   class="form-control"
@@ -217,7 +217,7 @@
                 />
               </div>
               <div class="col-md-12">
-                <label for="email" class="form-label">Email</label>
+                
                 <input
                   type="email"
                   class="form-control"
@@ -228,7 +228,7 @@
                 />
               </div>
               <div class="col-md-12">
-                <label for="phonenumber" class="form-label">Số điện thoại</label>
+                
                 <input
                   type="number"
                   class="form-control"
@@ -239,7 +239,7 @@
                 />
               </div>
               <div class="col-md-12">
-                <label for="password" class="form-label">Mật khẩu</label>
+             
                 <input
                   type="password"
                   class="form-control"

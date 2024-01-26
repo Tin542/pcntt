@@ -23,6 +23,11 @@
           <i class="bi bi-file-earmark-arrow-down" style=" font-size: 22px;"></i>
           <span class="nav_name">Văn bản đến</span>
         </a>
+        <% var isActived = path.includes('list-documentGo') ? 'active-nav' : '' %>
+        <a href="/list-documentGo" class="nav_link <%= isActived %>">
+          <i class="bi bi-file-earmark-arrow-down" style=" font-size: 22px;"></i>
+          <span class="nav_name">Văn bản đi</span>
+        </a>
       </div>
     </div>
   </nav>
