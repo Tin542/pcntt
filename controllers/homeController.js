@@ -108,7 +108,7 @@ function HomeController() {
         ];
         const result = (await db(req).query(query, inputs)).rowsAffected;
         if (result) {
-          res.redirect("/list-user");
+          res.redirect("/home/list-user");
         }
         db(req).close();
       } catch (error) {
@@ -144,7 +144,39 @@ function HomeController() {
         ];
         const result = (await db(req).query(query, inputs)).rowsAffected;
         if (result) {
-          return res.redirect("/list-user");
+          return res.redirect("/home/list-user");
+        }
+      } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+      }
+    },
+    deleteUser: async (req, res) => {
+      try {
+        let uid = req.body.userId;
+        const query = `UPDATE USERS SET status = 'False' WHERE id = @Id`;
+        const inputs = [
+          { name: "Id", value: parseInt(uid) },
+        ];
+        const result = (await db(req).query(query, inputs)).rowsAffected;
+        if (result) {
+          return res.redirect("/home/list-user");
+        }
+      } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+      }
+    },
+    restoreUser: async (req, res) => {
+      try {
+        let uid = req.body.userId;
+        const query = `UPDATE USERS SET status = 'True' WHERE id = @Id`;
+        const inputs = [
+          { name: "Id", value: parseInt(uid) },
+        ];
+        const result = (await db(req).query(query, inputs)).rowsAffected;
+        if (result) {
+          return res.redirect("/home/list-user");
         }
       } catch (error) {
         console.log(error);
@@ -155,14 +187,14 @@ function HomeController() {
       try {
         let uid = parseInt(req.body.userId);
         const password = sha256(process.env.DEFAULT_PASSWORD);
-        const query = `UPDATE USERS SET password = @Password WHERE id = @Id`;
+        const query = `UPDATE USERS SET status = 'True', password = @Password WHERE id = @Id`;
         const inputs = [
           { name: "Password", value: password },
           { name: "Id", value: uid },
         ];
         const result = (await db(req).query(query, inputs)).rowsAffected;
         if (result) {
-          return res.redirect("/list-user");
+          return res.redirect("/home/list-user");
         }
       } catch (error) {
         console.log(error);
@@ -245,6 +277,7 @@ function HomeController() {
         const query = "SELECT * FROM VAN_BAN WHERE id = @Id";
         const inputs = [{ name: "Id", value: parseInt(did) }];
         const result = (await db(req).query(query, inputs)).recordset;
+
         return res.render("pages/admin/adminPage", {
           users: null,
           documentCome: null,

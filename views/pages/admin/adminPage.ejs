@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin</title>
+    <title>Trang chủ</title>
 
     <link href="/views/assets/admin.css" rel="stylesheet" type="text/css" />
     <link href="/views/assets/footer.css" rel="stylesheet" type="text/css" />
@@ -64,6 +64,19 @@
         document.getElementById("username").value = "";
         document.getElementById("phone").value = "";
         document.getElementById("email").value = "";
+      }
+      function deleteUser(id) {
+        $.ajax({
+          type: "POST",
+          url: `/home/delete-user`,
+          data: {
+            userId: id,
+          },
+          success: function (rs) {
+            alert("Đã khóa tài khoản");
+            window.location.reload();
+          },
+        });
       }
       function resetPassword(id) {
         $.ajax({
