@@ -37,7 +37,11 @@ app.locals.pathname = '/';
 app.set("view engine", "ejs");
 app.use('/views', express.static('views'));
 
-app.use("/", home);
+app.use(function(req, res, next) {
+  res.locals.uid = req.session.uid;
+  next();
+});
+app.use("/home", home);
 app.use('/auth', auth);
 app.get("*", (req, res) => { 
   res.render("pages/auth/login.ejs");

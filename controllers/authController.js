@@ -104,7 +104,7 @@ function AuthController() {
       try {
         let data = req.body;
         const enCryptedPassword = sha256(data?.password);
-        const query = `SELECT id, perid, status FROM USERS WHERE username = @Username and password = @Password`;
+        const query = `SELECT id, perid, status FROM USERS WHERE username = @Username and password = @Password and status = 'True'`;
         const inputs = [
           {name: 'Username', value: data.username},
           {name: 'Password', value: enCryptedPassword}
@@ -127,7 +127,7 @@ function AuthController() {
         session.username = result[0].username;
         session.fullname = result[0].fullname;
         session.perid = result[0].perid;
-        return res.redirect("/dashboard");
+        return res.redirect("/home/dashboard");
       } catch (error) {
         console.log("login error: " + error);
       }
@@ -259,7 +259,7 @@ function AuthController() {
     checkLogin: async (req, res, next) => {
       try {
         let session = req.session;
-        if (session.userId) {
+        if (session.uid) {
           return next();
         } else {
           return res.redirect("/auth/login");

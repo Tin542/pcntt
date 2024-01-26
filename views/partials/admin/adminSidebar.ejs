@@ -9,22 +9,22 @@
       <hr/>
       <div class="nav_list">
         <% var isActived = path.includes('dashboard') ? 'active-nav' : '' %>
-        <a href="/dashboard" class="nav_link <%= isActived %>">
+        <a href="/home/dashboard" class="nav_link <%= isActived %>">
           <i class="bi bi-bar-chart-fill" style=" font-size: 22px;"></i>
           <span class="nav_name">Thống kê</span>
         </a>
         <% var isActived = path.includes('list-user') ? 'active-nav' : '' %>
-        <a href="/list-user" class="nav_link <%= isActived %>">
+        <a href="/home/list-user" class="nav_link <%= isActived %>">
           <i class="fs-4 bi-people"></i>
           <span class="nav_name">Tài khoản</span>
         </a>
         <% var isActived = path.includes('list-documentCome') ? 'active-nav' : '' %>
-        <a href="/list-documentCome" class="nav_link <%= isActived %>">
+        <a href="/home/list-documentCome" class="nav_link <%= isActived %>">
           <i class="bi bi-file-earmark-arrow-down" style=" font-size: 22px;"></i>
           <span class="nav_name">Văn bản đến</span>
         </a>
         <% var isActived = path.includes('list-documentGo') ? 'active-nav' : '' %>
-        <a href="/list-documentGo" class="nav_link <%= isActived %>">
+        <a href="/home/list-documentGo" class="nav_link <%= isActived %>">
           <i class="bi bi-file-earmark-arrow-down" style=" font-size: 22px;"></i>
           <span class="nav_name">Văn bản đi</span>
         </a>

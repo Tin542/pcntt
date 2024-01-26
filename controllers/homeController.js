@@ -234,7 +234,7 @@ function HomeController() {
         res.status(500).json(error);
       }
     },
-    detailDocumentCome: async (req, res) => {
+    detailDocument: async (req, res) => {
       try {
         let did = req.params.id;
 
@@ -248,7 +248,7 @@ function HomeController() {
         return res.render("pages/admin/adminPage", {
           users: null,
           documentCome: null,
-          docuemtnGo: null,
+          documentGo: null,
           listDepartment: resultDV,
           listDocType: resultLVB,
           listStatus: resultTT,

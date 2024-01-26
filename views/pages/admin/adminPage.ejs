@@ -68,7 +68,7 @@
       function resetPassword(id) {
         $.ajax({
           type: "POST",
-          url: `/reset-password`,
+          url: `/home/reset-password`,
           data: {
             userId: id,
           },
@@ -81,7 +81,7 @@
       function editUser(id) {
         $.ajax({
           type: "GET",
-          url: `/detail-user/${id}`,
+          url: `/home/detail-user/${id}`,
           success: function (rs) {
             if (rs.s === 200) {
               let data = rs.data[0];

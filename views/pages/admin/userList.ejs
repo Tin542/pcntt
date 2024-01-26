@@ -16,7 +16,7 @@
   </div>
 
   <div class="card p-3 mb-3">
-    <form action="/list-user" method="get">
+    <form action="/home/list-user" method="get">
       <div class="d-flex justify-content-between align-items-center">
         <div class="p-2">
           <input
@@ -126,7 +126,7 @@
       <% for(var i=1; i <= totalPage; i++) { %> <% var isActived = ( i ===
       currentPage ) ? "active" : ""; %>
       <li class="page-item <%= isActived %>">
-        <a class="page-link" href="/list-user?page=<%= i %>"><%= i %></a>
+        <a class="page-link" href="/home/list-user?page=<%= i %>"><%= i %></a>
       </li>
       <% }; %>
       <li class="page-item">
@@ -170,7 +170,7 @@
           ></button>
         </div>
         <div class="modal-body">
-          <form class="row g-3" action="/create-user" method="post">
+          <form class="row g-3" action="/home/create-user" method="post">
             <div class="col-md-12">
               <label for="name" class="form-label">Họ tên</label>
               <input
@@ -263,7 +263,7 @@
           ></button>
         </div>
         <div class="modal-body">
-          <form class="row g-3" action="/edit-user" method="post">
+          <form class="row g-3" action="/home/edit-user" method="post">
             <input
               type="hidden"
               class="form-control"
