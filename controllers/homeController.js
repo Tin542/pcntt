@@ -11,7 +11,7 @@ function HomeController() {
 
   // Lay tat ca don vi
   const listDepartment = async (req) => {
-    const DVQuery = `SELECT ma_dv, ten_dv FROM DON_VI WHERE status = 'True'`;
+    const DVQuery = `SELECT id, ma_dv, ten_dv FROM DON_VI WHERE status = 'True' ORDER BY id ASC`;
     return (await db(req).query(DVQuery)).recordset;
   };
 
@@ -26,6 +26,12 @@ function HomeController() {
     const TTQuery = `SELECT ma_tt, ten_tt FROM TRANG_THAI WHERE status = 'True'`;
     return (await db(req).query(TTQuery)).recordset;
   };
+
+  // Ly tat ca user
+  const listUser = async (req) => {
+    const UQuery = `SELECT username, fullname FROM USERS WHERE status = 'True'`;
+    return (await db(req).query(UQuery)).recordset;
+  }
 
   return {
     dashboard: async (req, res) => {
@@ -48,6 +54,7 @@ function HomeController() {
         res.status(500).json(error);
       }
     },
+    //User
     user: async (req, res) => {
       try {
         let params = req.body;
@@ -201,6 +208,7 @@ function HomeController() {
         res.status(500).json(error);
       }
     },
+    // Document
     documentCome: async (req, res) => {
       try {
         let params = req.body;
@@ -215,6 +223,7 @@ function HomeController() {
         let resultDV = await listDepartment(req);
         let resultLVB = await listDocType(req);
         let resultTT = await listStatus(req);
+        let resultUser = await listUser(req);
 
         // lay Tat ca van ban den
         const query = `SELECT id, so_vb, ngay_tao, ma_dvb, nguoi_lh, dv_phat_hanh, nguoi_nhan, trang_thai FROM VAN_BAN WHERE so_vb like '%${soVb}%' and loai_vb='CVDEN' and ma_dvb like '%${loaivb}%' and dv_phat_hanh like '%${donvi}%' and trang_thai like '%${trangthai}%' ORDER BY createdate DESC OFFSET ${
@@ -252,6 +261,7 @@ function HomeController() {
           listDepartment: resultDV,
           listDocType: resultLVB,
           listStatus: resultTT,
+          listUser: resultUser,
           filters: {
             soVb: soVb,
             loaivb: loaivb,
@@ -358,6 +368,42 @@ function HomeController() {
         res.status(500).json(error);
       }
     },
+    createDocumentCome: async (req, res) => {
+      try {
+        let createValue = req.body;
+        const query = `INSERT INTO VAN_BAN (so_vb, ngay_tao, loai_vb, ma_dvb, noi_dung, dv_phat_hanh, nguoi_lh, dien_thoai, dv_nhan, nguoi_nhan, nguoi_ky_vb, trang_thai, status, ghi_chu, createdate, createby, modifydate, modifyby, file_name)
+        VALUES ( @so_vb, @ngay_tao, @loai_vb, @ma_dvb, @noi_dung, @dv_phat_hanh, @nguoi_lh, @dien_thoai, @dv_nhan, @nguoi_nhan, @nguoi_ky_vb, @trang_thai, @status, @ghi_chu, @createdate, @createdby, @modifydate, @modifyby, @file_name)`;
+        const inputs = [
+          {name: 'so_vb', value: createValue.so_vb},
+          {name: 'ngay_tao', value: new Date()},
+          {name: 'loai_vb', value: 'CVDEN'},
+          {name: 'ma_dvb', value: createValue.ma_dvb},//
+          {name: 'noi_dung', value: createValue.noi_dung},
+          {name: 'dv_phat_hanh', value: createValue.dv_phat_hanh},//
+          {name: 'nguoi_lh', value: createValue.nguoi_lh},
+          {name: 'dien_thoai', value: createValue.dien_thoai},
+          {name: 'dv_nhan', value: 'DM_BP1501000000043'},// default Phòng Công nghệ Thông tin
+          {name: 'nguoi_nhan', value: createValue.nguoi_nhan},//
+          {name: 'nguoi_ky_vb', value: createValue.nguoi_ky_vb},
+          {name: 'trang_thai', value: createValue.trang_thai},//
+          {name: 'status', value: 'True'},
+          {name: 'ghi_chu', value: createValue.ghi_chu},
+          {name: 'createdate', value: new Date()},
+          {name: 'createdby', value: 'nguyenthanhtin@pnt.edu.vn'},
+          {name: 'modifydate', value: new Date()},
+          {name: 'modifyby', value: 'nguyenthanhtin@pnt.edu.vn'},
+          {name: 'file_name', value: 'pdf'},
+        ];
+        const result = (await db(req).query(query, inputs)).rowsAffected;
+        if (result) {
+          res.redirect("/home/list-documentCome");
+        }
+        db(req).close();
+      } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+      }
+    }
   };
 }
 

@@ -276,7 +276,7 @@ function AuthController() {
           res.redirect("/");
         } else {
           // Not logged in
-          res.redirect("/");
+          res.redirect("/auth/login");
         }
       } catch (error) {
         console.log(error);
