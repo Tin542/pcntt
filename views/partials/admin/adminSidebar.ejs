@@ -1,38 +1,48 @@
-
-<div class="l-navbar bg-white border fixed-top" id="nav-bar" style="width: 200px">
+<div
+  class="l-navbar bg-white border fixed-top"
+  id="nav-bar"
+  style="width: 200px"
+>
   <nav class="nav">
     <div>
       <a href="#" class="nav_logo">
         <i class="bx bx-layer nav_logo-icon"></i>
         <span class="nav_logo-name">PCNTT</span>
       </a>
-      <hr/>
+      <hr />
       <div class="nav_list">
         <% var isActived = path.includes('dashboard') ? 'active-nav' : '' %>
-        <a href="/home/dashboard" class="nav_link <%= isActived %>">
-          <i class="bi bi-bar-chart-fill" style=" font-size: 22px;"></i>
-          <span class="nav_name">Thống kê</span>
-        </a>
+        <form action="/home/dashboard" method="get">
+          <button type="submit" class="btn btn-link nav-link <%= isActived %>">
+            <i class="bi bi-bar-chart-fill" style="font-size: 22px"></i>
+            <span class="nav_name">Thống kê</span>
+          </button>
+        </form>
         <% var isActived = path.includes('list-user') ? 'active-nav' : '' %>
-        <a href="/home/list-user" class="nav_link <%= isActived %>">
-          <i class="fs-4 bi-people"></i>
-          <span class="nav_name">Tài khoản</span>
-        </a>
-        <% var isActived = path.includes('list-documentCome') ? 'active-nav' : '' %>
-        <a href="/home/list-documentCome" class="nav_link <%= isActived %>">
-          <i class="bi bi-file-earmark-arrow-down" style=" font-size: 22px;"></i>
-          <span class="nav_name">Văn bản đến</span>
-        </a>
-        <% var isActived = path.includes('list-documentGo') ? 'active-nav' : '' %>
-        <a href="/home/list-documentGo" class="nav_link <%= isActived %>">
-          <i class="bi bi-file-earmark-arrow-down" style=" font-size: 22px;"></i>
-          <span class="nav_name">Văn bản đi</span>
-        </a>
+        <form action="/home/list-user" method="post">
+          <button type="submit" class="btn btn-link nav-link <%= isActived %>">
+            <i class="fs-4 bi-people" style="font-size: 22px"></i>
+            <span class="nav_name">Tài khoản</span>
+          </button>
+        </form>
+        <% var isActived = path.includes('list-documentCome') ? 'active-nav' :
+        '' %>
+        <form action="/home/list-documentCome" method="post">
+          <button type="submit" class="btn btn-link nav-link <%= isActived %>">
+            <i class="bi bi-file-arrow-down" style="font-size: 22px"></i>
+            <span class="nav_name">Văn bản đến</span>
+          </button>
+        </form>
+        <% var isActived = path.includes('list-documentGo') ? 'active-nav' : ''
+        %>
+        <form action="/home/list-documentGo" method="post">
+          <button type="submit" class="btn btn-link nav-link <%= isActived %>">
+            <i class="bi bi-file-arrow-up" style="font-size: 22px"></i>
+            <span class="nav_name">Văn bản đi</span>
+          </button>
+        </form>
       </div>
     </div>
   </nav>
 </div>
-<script
-    type="application/javascript"
-  src="../../js/admin.js"
-></script>
+<script type="application/javascript" src="../../js/admin.js"></script>

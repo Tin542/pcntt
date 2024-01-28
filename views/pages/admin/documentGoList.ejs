@@ -16,7 +16,7 @@
     </div>
   
     <div class="card p-3 mb-3 d-block">
-      <form action="/home/list-documentCome" method="get">
+      <form action="/home/list-documentGo" method="post">
         <div class="d-flex justify-content-between align-items-center">
           <div style="width: 250px;" class="p-2">
             <input
@@ -149,7 +149,14 @@
         <% for(var i=1; i <= totalPage; i++) { %> <% var isActived = ( i ===
         currentPage ) ? "active" : ""; %>
         <li class="page-item <%= isActived %>">
-          <a class="page-link" href="/home/list-documentGo?page=<%= i %>"><%= i %></a>
+          <form action="/home/list-documentGo" method="post">
+            <input type="hidden" name="page" value="<%= i %>"/>
+            <input type="hidden" name="soVb" value="<%= filters.soVb %>"/>
+            <input type="hidden" name="loaivb" value="<%= filters.loaivb %>"/>
+            <input type="hidden" name="donvi" value="<%= filters.donvi %>"/>
+            <input type="hidden" name="trangthai" value="<%= filters.trangthai %>"/>
+            <button type="submit" class="btn btn-link page-link"><%= i %></button>
+          </form>
         </li>
         <% }; %>
         <li class="page-item">

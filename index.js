@@ -43,9 +43,9 @@ app.use(function(req, res, next) {
 });
 app.use("/home", home);
 app.use('/auth', auth);
-app.get("*", (req, res) => { 
-  res.render("pages/auth/login.ejs");
-}); 
+// app.get("*", (req, res) => { 
+//   res.render("pages/auth/login.ejs");
+// }); 
 
 app.listen(port, function () {
   console.log("Node server running @ http://localhost:3000");

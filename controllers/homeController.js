@@ -50,7 +50,7 @@ function HomeController() {
     },
     user: async (req, res) => {
       try {
-        let params = req.query;
+        let params = req.body;
         let username = params.username ? params.username : "";
         let email = params.email ? params.email : "";
         let phone = params.phone ? params.phone : "";
@@ -203,7 +203,7 @@ function HomeController() {
     },
     documentCome: async (req, res) => {
       try {
-        let params = req.query;
+        let params = req.body;
         let soVb = params.soVb ? params.soVb : "";
         let loaivb = params.loaivb ? params.loaivb : "";
         let donvi = params.donvi ? params.donvi : "";
@@ -295,7 +295,7 @@ function HomeController() {
     },
     documentGo: async (req, res) => {
       try {
-        let params = req.query;
+        let params = req.body;
         let soVb = params.soVb ? params.soVb : "";
         let loaivb = params.loaivb ? params.loaivb : "";
         let donvi = params.donvi ? params.donvi : "";
