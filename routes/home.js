@@ -22,5 +22,6 @@ router.post('/list-documentCome', homeController.documentCome);// search / filer
 router.post('/list-documentGo', homeController.documentGo);// search / filer
 router.get('/detail-document/:id', homeController.detailDocument);
 router.post('/create-documentCome', homeController.createDocumentCome);
+router.delete('/delete-document/:id', homeController.deleteDocument);
 
 module.exports = router;

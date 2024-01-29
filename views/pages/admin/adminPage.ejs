@@ -65,6 +65,16 @@
         document.getElementById("phone").value = "";
         document.getElementById("email").value = "";
       }
+      function deleteDocument (id) {
+        $.ajax({
+          type: "DELETE",
+          url: `/home/delete-document/${id}`,
+          success: function (rs) {
+            alert("Xóa văn bản thành công");
+            window.location.reload();
+          },
+        });
+      }
       function deleteUser(id) {
         $.ajax({
           type: "POST",

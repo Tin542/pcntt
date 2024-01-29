@@ -403,6 +403,22 @@ function HomeController() {
         console.log(error);
         res.status(500).json(error);
       }
+    },
+    deleteDocument: async (req, res) => {
+      try {
+        let id = req.params.id;
+        const DeleteQuery = `DELETE VAN_BAN WHERE id=@Id`;
+        const inputs = [
+          {name: 'Id', value: parseInt(id)}
+        ];
+        const result = (await db(req).query(DeleteQuery, inputs)).rowsAffected;
+        if (result) {
+          res.json({ s: 200, msg: "Delete success!!" });
+        }
+      } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+      }
     }
   };
 }

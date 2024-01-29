@@ -84,14 +84,14 @@
     <thead>
       <tr>
         <th scope="col">Id</th>
-        <th scope="col">Ngày tạo</th>
-        <th scope="col">Số văn bản</th>
-        <th scope="col">Loại văn bản</th>
+        <th scope="col" style="width: 178px;">Ngày tạo</th>
+        <th scope="col">Số</th>
+        <th scope="col" style="width: 100px;">Loại</th>
         <th scope="col">Đơn vị gửi</th>
-        <th scope="col">Người liên hệ</th>
-        <th scope="col">Người nhận</th>
-        <th scope="col">Trạng thái</th>
-        <th scope="col">Thao tác</th>
+        <th scope="col" style="width: 162px;">Người liên hệ</th>
+        <th scope="col" style="width: 162px;">Người nhận</th>
+        <th scope="col" style="width: 130px;">Trạng thái</th>
+        <th scope="col" style="width: 130px;">Thao tác</th>
       </tr>
     </thead>
     <tbody>
@@ -99,14 +99,14 @@
       <tr>
         <th scope="row"><%= item.id %></th>
         <td><%= item.ngay_tao %></td>
-        <td><%= item.so_vb %></td>
+         <td><%= item.so_vb %></td>
         <td><%= item.dangVB %></td>
         <td><%= item.donvi %></td>
         <td><%= item.nguoi_lh %></td>
         <td><%= item.nguoi_nhan %></td>
         <td><%= item.trang_thai %></td>
 
-        <td align="center">
+        <td width="" align="center">
           <div class="d-grid gap-2 d-md-block">
             <a
               class="btn btn-outline-info btn-sm"
@@ -124,6 +124,15 @@
               data-bs-target="#editModal"
             >
               <i class="bi bi-pencil-fill"></i>
+            </button>
+            <button
+              class="btn btn-outline-danger btn-sm"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Xóa"
+              onclick='deleteDocument("<%= item.id %>")'
+            >
+              <i class="bi bi-trash"></i>
             </button>
           </div>
         </td>
@@ -338,14 +347,14 @@
             </div>
             <div class="col-md-12">
               <div class="form-floating">
-                <input
-                  type="text"
+                <textarea
                   class="form-control"
+                  placeholder=""
                   id="note"
                   name="ghi_chu"
-                  placeholder="Ghi chú"
                   required
-                />
+                  style="height: 100px"
+                ></textarea>
                 <label for="note">Ghi chú</label>
               </div>
             </div>
