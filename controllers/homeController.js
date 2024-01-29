@@ -212,10 +212,10 @@ function HomeController() {
     documentCome: async (req, res) => {
       try {
         let params = req.body;
-        let soVb = params.soVb ? params.soVb : "";
-        let loaivb = params.loaivb ? params.loaivb : "";
-        let donvi = params.donvi ? params.donvi : "";
-        let trangthai = params.trangthai ? params.trangthai : "";
+        let soVb = params.soVbSearch ? params.soVbSearch : "";
+        let loaivb = params.loaivbSearch ? params.loaivbSearch : "";
+        let donvi = params.donviSearch ? params.donviSearch : "";
+        let trangthai = params.trangthaiSearch ? params.trangthaiSearch : "";
 
         let ItemsPerPage = 10;
         let currentPage = params.page ? parseInt(params.page) : 1;
@@ -263,10 +263,10 @@ function HomeController() {
           listStatus: resultTT,
           listUser: resultUser,
           filters: {
-            soVb: soVb,
-            loaivb: loaivb,
-            donvi: donvi,
-            trangthai: trangthai,
+            soVbSearch: soVb,
+            loaivbSearch: loaivb,
+            donviSearch: donvi,
+            trangthaiSearch: trangthai,
           },
           detailDocument: null,
           path: pathname(req),

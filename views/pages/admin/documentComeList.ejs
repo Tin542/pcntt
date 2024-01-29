@@ -21,47 +21,45 @@
         <div style="width: 250px" class="p-2">
           <input
             id="soVb"
-            name="soVb"
+            name="soVbSearch"
             type="text"
             class="form-control"
             placeholder="Số văn bản"
-            value="<%= filters.soVb %>"
+            value="<%= filters.soVbSearch %>"
           />
         </div>
         <div style="width: 250px" class="p-2">
-          <select id="loaivb" name="loaivb" class="form-select">
+          <select id="loaivbSearch" name="loaivbSearch" class="form-select">
             <option hidden value="">-Dạng Văn bản-</option>
             <% for ( var i = 0; i < listDocType.length; i++ ) { var selected = (
-            listDocType[i].ma_dvb === filters.loaivb ) ? "selected" : ""; %>
-            <option value="<%= listDocType[i].ma_dvb %>" <%="selected" %>
-              ><%= listDocType[i].ten_dvb %>
+            listDocType[i].ma_dvb === filters.loaivbSearch ) ? "selected" : ""; %>
+            <option value="<%= listDocType[i].ma_dvb %>" <%= selected %> >
+              <%= listDocType[i].ten_dvb %>
             </option>
             <% } %>
           </select>
         </div>
         <div style="width: 250px" class="p-2">
-          <select id="donvi" name="donvi" class="form-select">
-            <label for="exampleDataList" class="form-label"
-              >Datalist example</label
+          <select id="donviSearch" name="donviSearch" class="form-select">
             >
             <option hidden value="">-Đơn vị gửi-</option>
             <% for ( var i = 0; i < listDepartment.length; i++ ) { var selected
-            = ( listDepartment[i].ma_dv === filters.donvi ) ? "selected" : "";
+            = ( listDepartment[i].ma_dv === filters.donviSearch ) ? "selected" : "";
             %>
-            <option value="<%= listDepartment[i].ma_dv %>" <%="selected" %>
-              ><%= listDepartment[i].ten_dv %>
+            <option value="<%= listDepartment[i].ma_dv %>" <%= selected %> >
+              <%= listDepartment[i].ten_dv %>
             </option>
             <% } %>
           </select>
         </div>
 
         <div style="width: 250px" class="p-2">
-          <select id="trangthai" name="trangthai" class="form-select">
+          <select id="trangthaiSearch" name="trangthaiSearch" class="form-select">
             <option hidden value="">-Trạng thái-</option>
-            <% for ( var i = 0; i < listStatus.length; i++ ) { var selected = (
-            listStatus[i].ma_tt === filters.trangthai ) ? "selected" : ""; %>
-            <option value="<%= listStatus[i].ma_tt %>" <%="selected" %>
-              ><%= listStatus[i].ten_tt %>
+            <% for ( var i = 0; i < listStatus.length; i++ ) {  %> 
+              <% var selected = (listStatus[i].ma_tt === filters.trangthaiSearch ) ? "selected" : ""; %>
+              <option value="<%= listStatus[i].ma_tt %>" <%= selected %> >
+              <%= listStatus[i].ten_tt %>
             </option>
             <% } %>
           </select>
