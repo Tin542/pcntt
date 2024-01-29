@@ -65,6 +65,29 @@
         document.getElementById("phone").value = "";
         document.getElementById("email").value = "";
       }
+      function editDocumentCome(id) {
+        $.ajax({
+          type: "GET",
+          url: `/home/detail-document-edit/${id}`,
+          success: function (rs) {
+            console.log('rs', rs);
+            if (rs.s === 200) {
+              let data = rs.data;
+              document.getElementById("id_edit").value = data.id;
+              document.getElementById("doc_number_edit").value = data.so_vb;
+              document.getElementById("doc_type_code_edit").value = data.ma_dvb;
+              document.getElementById("content_edit").value = data.noi_dung;
+              document.getElementById("department_sent_edit").value = data.dv_phat_hanh;
+              document.getElementById("contact_edit").value = data.nguoi_lh;
+              document.getElementById("phone_edit").value = data.dien_thoai;
+              document.getElementById("take_person_edit").value = data.nguoi_nhan;
+              document.getElementById("sign_person_edit").value = data.nguoi_ky_vb;
+              document.getElementById("status_edit").value = data.trang_thai;
+              document.getElementById("note_edit").value = data.ghi_chu;
+            }
+          },
+        });
+      }
       function deleteDocument (id) {
         $.ajax({
           type: "DELETE",

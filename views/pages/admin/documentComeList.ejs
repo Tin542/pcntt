@@ -20,7 +20,7 @@
       <div class="d-flex justify-content-between align-items-center">
         <div style="width: 250px" class="p-2">
           <input
-            id="soVb"
+            id="soVbSearch"
             name="soVbSearch"
             type="text"
             class="form-control"
@@ -81,13 +81,13 @@
   <table class="table table-bordered bg-white mt-3">
     <thead>
       <tr>
-        <th scope="col">Id</th>
+        <th scope="col" style="width: 100px;">Id</th>
         <th scope="col" style="width: 178px;">Ngày tạo</th>
-        <th scope="col">Số</th>
-        <th scope="col" style="width: 100px;">Loại</th>
+        <th scope="col" style="width: 100px;">Số</th>
+        <th scope="col" style="width: 150px;">Loại</th>
         <th scope="col">Đơn vị gửi</th>
-        <th scope="col" style="width: 162px;">Người liên hệ</th>
-        <th scope="col" style="width: 162px;">Người nhận</th>
+        <th scope="col" style="width: 250px;">Người liên hệ</th>
+        <th scope="col" style="width: 250px;">Người nhận</th>
         <th scope="col" style="width: 130px;">Trạng thái</th>
         <th scope="col" style="width: 130px;">Thao tác</th>
       </tr>
@@ -120,6 +120,7 @@
               class="btn btn-outline-info btn-sm"
               data-bs-toggle="modal"
               data-bs-target="#editModal"
+              onclick='editDocumentCome("<%= item.id %>")'
             >
               <i class="bi bi-pencil-fill"></i>
             </button>
@@ -381,10 +382,10 @@
     aria-labelledby="editModal"
     aria-hidden="true"
   >
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="editModal">Chỉnh sửa tài khoản</h5>
+          <h5 class="modal-title" id="editModal">Chỉnh sửa văn bản</h5>
           <button
             type="button"
             class="btn-close"
@@ -393,61 +394,155 @@
           ></button>
         </div>
         <div class="modal-body">
-          <form class="row g-3" action="/edit-user" method="post">
-            <input
-              type="hidden"
-              class="form-control"
-              id="idEdit"
-              name="idEdit"
-              value=""
-            />
-            <div class="col-md-12">
-              <label for="name" class="form-label">Họ tên</label>
-              <input
-                type="text"
-                class="form-control"
-                id="fullnameEdit"
-                name="fullnameEdit"
-                placeholder="Nhập Họ tên"
-                value=""
-                required
-              />
+          <form class="row g-3" action="/home/edit-documentCome" method="post">
+            <div class="col-md-6">
+              <input type="hidden" name="id" id="id_edit" value=""/>
+              <div class="form-floating">
+                <input
+                  type="number"
+                  class="form-control"
+                  id="doc_number_edit"
+                  name="so_vb"
+                  placeholder=""
+                  required
+                />
+                <label for="doc_number_edit">Số văn bản</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <select
+                  id="doc_type_code_edit"
+                  name="ma_dvb"
+                  class="form-select"
+                  aria-placeholder="Dạng văn bản"
+                >
+                  <% for ( var i = 0; i < listDocType.length; i++ ) { %>
+                  <option value="<%= listDocType[i].ma_dvb %>">
+                    <%= listDocType[i].ten_dvb %>
+                  </option>
+                  <% } %>
+                </select>
+                <label for="doc_type_code">Dạng văn bản</label>
+              </div>
             </div>
             <div class="col-md-12">
-              <label for="username" class="form-label">Tên tài khoản</label>
-              <input
-                type="text"
-                class="form-control"
-                id="usernameEdit"
-                name="usernameEdit"
-                placeholder="Nhập Tên tài khoản"
-                value=""
-                required
-              />
+              <div class="form-floating">
+                <textarea
+                  class="form-control"
+                  placeholder=""
+                  id="content_edit"
+                  name="noi_dung"
+                  required
+                  style="height: 100px"
+                ></textarea>
+                <label for="content">Nội dung văn bản</label>
+              </div>
             </div>
             <div class="col-md-12">
-              <label for="email" class="form-label">Email</label>
-              <input
-                type="email"
-                class="form-control"
-                id="emailEdit"
-                name="emailEdit"
-                placeholder="Nhập Email"
-                value=""
-                required
-              />
+              <div class="form-floating">
+                <select
+                  id="department_sent_edit"
+                  name="dv_phat_hanh"
+                  class="form-select"
+                  aria-placeholder="Đơn vị phát hành"
+                >
+                  <% for ( var i = 0; i < listDepartment.length; i++ ) { %>
+                  <option value="<%= listDepartment[i].ma_dv %>">
+                    <%= listDepartment[i].id %> - <%= listDepartment[i].ten_dv
+                    %>
+                  </option>
+                  <% } %>
+                </select>
+                <label for="department_sent">Đơn vị gửi</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="contact_edit"
+                  name="nguoi_lh"
+                  placeholder="Người liên hệ"
+                  required
+                />
+                <label for="nguoi_lh">Người liên hệ</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="phone_edit"
+                  name="dien_thoai"
+                  placeholder="Số điện thoại"
+                  required
+                />
+                <label for="phone">Số điện thoại</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating">
+                <select
+                  id="take_person_edit"
+                  name="nguoi_nhan"
+                  class="form-select"
+                  aria-placeholder="Người nhận"
+                >
+                  <% for ( var i = 0; i < listUser.length; i++ ) { %>
+                  <option value="<%= listUser[i].fullname %>">
+                    <%= listUser[i].fullname %>
+                  </option>
+                  <% } %>
+                </select>
+                <label for="take_person">Người nhận</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating">
+                <select
+                  id="sign_person_edit"
+                  name="nguoi_ky_vb"
+                  class="form-select"
+                  aria-placeholder="Người nhận"
+                >
+                  <% for ( var i = 0; i < listUser.length; i++ ) { %>
+                  <option value="<%= listUser[i].fullname %>">
+                    <%= listUser[i].fullname %>
+                  </option>
+                  <% } %>
+                </select>
+                <label for="sign_person">Người ký văn bản</label>
+              </div>
             </div>
             <div class="col-md-12">
-              <label for="phonenumber" class="form-label">Số điện thoại</label>
-              <input
-                type="number"
-                class="form-control"
-                id="phonenumberEdit"
-                name="phonenumberEdit"
-                placeholder="Nhập Số điện thoại"
-                value=""
-                required
-              />
+              <div class="form-floating">
+                <select id="status_edit" name="trang_thai" class="form-select">
+                  <% for ( var i = 0; i < listStatus.length; i++ ) { %>
+                  <option value="<%= listStatus[i].ma_tt %>">
+                    <%= listStatus[i].ten_tt %>
+                  </option>
+                  <% } %>
+                </select>
+                <label for="status">Trạng thái</label>
+              </div>
+              
+            </div>
+            <div class="col-md-12">
+              <div class="form-floating">
+                <textarea
+                  class="form-control"
+                  placeholder=""
+                  id="note_edit"
+                  name="ghi_chu"
+                  required
+                  style="height: 100px"
+                ></textarea>
+                <label for="note">Ghi chú</label>
+              </div>
             </div>
 
             <div class="col-12">

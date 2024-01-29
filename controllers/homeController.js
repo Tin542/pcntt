@@ -303,6 +303,18 @@ function HomeController() {
         res.status(500).json(error);
       }
     },
+    getDetailDocumentForUpdate: async (req, res) => {
+      try {
+        let did = req.params.id;
+        const query = "SELECT * FROM VAN_BAN WHERE id = @Id";
+        const inputs = [{ name: "Id", value: parseInt(did) }];
+        const result = (await db(req).query(query, inputs)).recordset;
+        return res.json({ s: 200, data: result[0] });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+      }
+    },
     documentGo: async (req, res) => {
       try {
         let params = req.body;
@@ -415,6 +427,36 @@ function HomeController() {
         if (result) {
           res.json({ s: 200, msg: "Delete success!!" });
         }
+      } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+      }
+    },
+    editDocumentCome: async (req, res) => {
+      try {
+        let editValue = req.body;
+        const query = `UPDATE VAN_BAN SET so_vb=@sovb, ma_dvb=@madvb, noi_dung=@noidung, dv_phat_hanh=@dvphathanh, nguoi_lh=@nguoilh, dien_thoai=@dienthoai, nguoi_nhan=@nguoinhan, nguoi_ky_vb=@nguoikyvb, trang_thai=@trangthai, ghi_chu=@ghichu, modifyby=@modifyBy, modifydate=@modifyDate, file_name=@fileName WHERE id=@Id`;
+        const inputs = [
+          {name: 'sovb', value: editValue.so_vb},
+          {name: 'madvb', value: editValue.ma_dvb},//
+          {name: 'noidung', value: editValue.noi_dung},
+          {name: 'dvphathanh', value: editValue.dv_phat_hanh},//
+          {name: 'nguoilh', value: editValue.nguoi_lh},
+          {name: 'dienthoai', value: editValue.dien_thoai},
+          {name: 'nguoinhan', value: editValue.nguoi_nhan},//
+          {name: 'nguoikyvb', value: editValue.nguoi_ky_vb},
+          {name: 'trangthai', value: editValue.trang_thai},//
+          {name: 'ghichu', value: editValue.ghi_chu},
+          {name: 'modifydate', value: new Date()},
+          {name: 'modifyby', value: 'nguyenthanhtin@pnt.edu.vn'},
+          {name: 'fileName', value: 'pdf'},
+          {name: 'Id', value: editValue.id},
+        ];
+        const result = (await db(req).query(query, inputs)).rowsAffected;
+        if (result) {
+          res.redirect("/home/list-documentCome");
+        }
+        db(req).close();
       } catch (error) {
         console.log(error);
         res.status(500).json(error);
