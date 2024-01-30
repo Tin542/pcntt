@@ -36,16 +36,21 @@ app.locals.pathname = "/";
 app.set("view engine", "ejs");
 app.use("/views", express.static("views"));
 
-app.use(function (req, res, next) {
-  res.locals.uid = req.session.uid;
-  res.locals.fullname = req.session.fullname;
-  res.locals.username = req.session.username;
-  next();
-});
+// app.use(function (req, res, next) {
+//   console.log('session: ' + req.session);
+//   res.locals.uid = req.session.uid;
+//   res.locals.fullname = req.session.fullname;
+//   res.locals.username = req.session.username;
+//   next();
+// });
 app.use("/home", home);
 app.use("/auth", auth);
-app.get("*", (req, res) => {
-  res.render("pages/auth/login.ejs");
+app.get("/", (req, res) => {
+  if (req.session.user) {
+    res.redirect("/home/dashboard");
+  } else {
+    res.redirect("/auth/login");
+  }
 });
 
 app.listen(port, function () {
