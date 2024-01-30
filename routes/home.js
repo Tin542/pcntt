@@ -3,7 +3,7 @@ const homeController = require("../controllers/homeController");
 const authController = require("../controllers/authController");
 const router = express.Router({});
 
-// router.use(authController.checkLogin);
+router.use(authController.checkLogin);
 
 //Dashboard
 router.get("/dashboard", homeController.dashboard);

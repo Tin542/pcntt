@@ -317,6 +317,8 @@ function HomeController() {
     },
     createDocumentCome: async (req, res) => {
       try {
+        const currentUser = res.locals.username;
+        console.log(currentUser);
         let createValue = req.body;
         const query = `INSERT INTO VAN_BAN (so_vb, ngay_tao, loai_vb, ma_dvb, noi_dung, dv_phat_hanh, nguoi_lh, dien_thoai, dv_nhan, nguoi_nhan, nguoi_ky_vb, trang_thai, status, ghi_chu, createdate, createby, modifydate, modifyby, file_name)
         VALUES ( @so_vb, @ngay_tao, @loai_vb, @ma_dvb, @noi_dung, @dv_phat_hanh, @nguoi_lh, @dien_thoai, @dv_nhan, @nguoi_nhan, @nguoi_ky_vb, @trang_thai, @status, @ghi_chu, @createdate, @createdby, @modifydate, @modifyby, @file_name)`;
@@ -336,9 +338,9 @@ function HomeController() {
           {name: 'status', value: 'True'},
           {name: 'ghi_chu', value: createValue.ghi_chu ? createValue.ghi_chu : ''},
           {name: 'createdate', value: new Date()},
-          {name: 'createdby', value: 'nguyenthanhtin@pnt.edu.vn'},
+          {name: 'createdby', value: currentUser},
           {name: 'modifydate', value: new Date()},
-          {name: 'modifyby', value: 'nguyenthanhtin@pnt.edu.vn'},
+          {name: 'modifyby', value: currentUser},
           {name: 'file_name', value: 'pdf'},
         ];
         const result = (await db(req).query(query, inputs)).rowsAffected;
@@ -369,6 +371,7 @@ function HomeController() {
     },
     editDocumentCome: async (req, res) => {
       try {
+        const currentUser = res.locals.username;
         let editValue = req.body;
         const query = `UPDATE VAN_BAN SET so_vb=@sovb, ma_dvb=@madvb, noi_dung=@noidung, dv_phat_hanh=@dvphathanh, nguoi_lh=@nguoilh, dien_thoai=@dienthoai, nguoi_nhan=@nguoinhan, nguoi_ky_vb=@nguoikyvb, trang_thai=@trangthai, ghi_chu=@ghichu, modifyby=@modifyBy, modifydate=@modifyDate, file_name=@fileName WHERE id=@Id`;
         const inputs = [
@@ -383,7 +386,7 @@ function HomeController() {
           {name: 'trangthai', value: editValue.trang_thai},//
           {name: 'ghichu', value: editValue.ghi_chu},
           {name: 'modifydate', value: new Date()},
-          {name: 'modifyby', value: 'nguyenthanhtin@pnt.edu.vn'},
+          {name: 'modifyby', value: currentUser},
           {name: 'fileName', value: 'pdf'},
           {name: 'Id', value: editValue.id},
         ];
@@ -466,6 +469,7 @@ function HomeController() {
     },
     createDocumentGo: async (req, res) => {
       try {
+        const currentUser = req.session.username;
         let createValue = req.body;
         const query = `INSERT INTO VAN_BAN (so_vb, ngay_tao, loai_vb, ma_dvb, noi_dung, dv_phat_hanh, nguoi_lh, dien_thoai, dv_nhan, nguoi_nhan, nguoi_ky_vb, trang_thai, status, ghi_chu, createdate, createby, modifydate, modifyby, file_name)
         VALUES ( @so_vb, @ngay_tao, @loai_vb, @ma_dvb, @noi_dung, @dv_phat_hanh, @nguoi_lh, @dien_thoai, @dv_nhan, @nguoi_nhan, @nguoi_ky_vb, @trang_thai, @status, @ghi_chu, @createdate, @createdby, @modifydate, @modifyby, @file_name)`;
@@ -485,9 +489,9 @@ function HomeController() {
           {name: 'status', value: 'True'},
           {name: 'ghi_chu', value: createValue.ghi_chu},
           {name: 'createdate', value: new Date()},
-          {name: 'createdby', value: 'nguyenthanhtin@pnt.edu.vn'},
+          {name: 'createdby', value: currentUser},
           {name: 'modifydate', value: new Date()},
-          {name: 'modifyby', value: 'nguyenthanhtin@pnt.edu.vn'},
+          {name: 'modifyby', value: currentUser},
           {name: 'file_name', value: 'pdf'},
         ];
         const result = (await db(req).query(query, inputs)).rowsAffected;
@@ -502,6 +506,7 @@ function HomeController() {
     },
     editDocumentGo: async (req, res) => {
       try {
+        const currentUser = res.locals.username;
         let editValue = req.body;
         const query = `UPDATE VAN_BAN SET so_vb=@sovb, ma_dvb=@madvb, noi_dung=@noidung, dv_phat_hanh=@dvphathanh, nguoi_lh=@nguoilh, dien_thoai=@dienthoai, nguoi_nhan=@nguoinhan, nguoi_ky_vb=@nguoikyvb, trang_thai=@trangthai, ghi_chu=@ghichu, modifyby=@modifyBy, modifydate=@modifyDate, file_name=@fileName WHERE id=@Id`;
         const inputs = [
@@ -516,7 +521,7 @@ function HomeController() {
           {name: 'trangthai', value: editValue.trang_thai},//
           {name: 'ghichu', value: editValue.ghi_chu},
           {name: 'modifydate', value: new Date()},
-          {name: 'modifyby', value: 'nguyenthanhtin@pnt.edu.vn'},
+          {name: 'modifyby', value: currentUser},
           {name: 'fileName', value: 'pdf'},
           {name: 'Id', value: editValue.id},
         ];

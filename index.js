@@ -38,6 +38,8 @@ app.use("/views", express.static("views"));
 
 app.use(function (req, res, next) {
   res.locals.uid = req.session.uid;
+  res.locals.fullname = req.session.fullname;
+  res.locals.username = req.session.username;
   next();
 });
 app.use("/home", home);
