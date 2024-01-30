@@ -47,7 +47,7 @@
             = ( listDepartment[i].ma_dv === filters.donviSearch ) ? "selected" : "";
             %>
             <option value="<%= listDepartment[i].ma_dv %>" <%= selected %> >
-              <%= listDepartment[i].ten_dv %>
+              <%= listDepartment[i].id %> - <%= listDepartment[i].ma_dv %> - <%= listDepartment[i].ten_dv %>
             </option>
             <% } %>
           </select>
@@ -256,13 +256,13 @@
               <div class="form-floating">
                 <select
                   id="department_sent"
-                  name="dv_nhan"
+                  name="dv_phat_hanh"
                   class="form-select"
                   aria-placeholder="Đơn vị phát hành"
                 >
                   <% for ( var i = 0; i < listDepartment.length; i++ ) { %>
                   <option value="<%= listDepartment[i].ma_dv %>">
-                    <%= listDepartment[i].id %> - <%= listDepartment[i].ten_dv
+                    <%= listDepartment[i].id %> - <%= listDepartment[i].ma_dv %> - <%= listDepartment[i].ten_dv %>
                     %>
                   </option>
                   <% } %>
@@ -315,18 +315,14 @@
             </div>
             <div class="col-md-6">
               <div class="form-floating">
-                <select
+                <input
+                  type="text"
+                  class="form-control"
                   id="sign_person"
                   name="nguoi_ky_vb"
-                  class="form-select"
-                  aria-placeholder="Người nhận"
-                >
-                  <% for ( var i = 0; i < listUser.length; i++ ) { %>
-                  <option value="<%= listUser[i].fullname %>">
-                    <%= listUser[i].fullname %>
-                  </option>
-                  <% } %>
-                </select>
+                  placeholder=""
+                  required
+                />
                 <label for="sign_person">Người ký văn bản</label>
               </div>
             </div>
@@ -350,7 +346,6 @@
                   placeholder=""
                   id="note"
                   name="ghi_chu"
-                  required
                   style="height: 100px"
                 ></textarea>
                 <label for="note">Ghi chú</label>
@@ -423,7 +418,7 @@
                   </option>
                   <% } %>
                 </select>
-                <label for="doc_type_code">Dạng văn bản</label>
+                <label for="doc_type_code_edit">Dạng văn bản</label>
               </div>
             </div>
             <div class="col-md-12">
@@ -436,7 +431,7 @@
                   required
                   style="height: 100px"
                 ></textarea>
-                <label for="content">Nội dung văn bản</label>
+                <label for="content_edit">Nội dung văn bản</label>
               </div>
             </div>
             <div class="col-md-12">
@@ -449,12 +444,11 @@
                 >
                   <% for ( var i = 0; i < listDepartment.length; i++ ) { %>
                   <option value="<%= listDepartment[i].ma_dv %>">
-                    <%= listDepartment[i].id %> - <%= listDepartment[i].ten_dv
-                    %>
+                    <%= listDepartment[i].id %> - <%= listDepartment[i].ma_dv %> - <%= listDepartment[i].ten_dv %>
                   </option>
                   <% } %>
                 </select>
-                <label for="department_sent">Đơn vị gửi</label>
+                <label for="department_sent_edit">Đơn vị gửi</label>
               </div>
             </div>
             <div class="col-md-6">
@@ -467,7 +461,7 @@
                   placeholder="Người liên hệ"
                   required
                 />
-                <label for="nguoi_lh">Người liên hệ</label>
+                <label for="contact_edit">Người liên hệ</label>
               </div>
             </div>
             <div class="col-md-6">
@@ -480,7 +474,7 @@
                   placeholder="Số điện thoại"
                   required
                 />
-                <label for="phone">Số điện thoại</label>
+                <label for="phone_edit">Số điện thoại</label>
               </div>
             </div>
             <div class="col-md-6">
@@ -497,24 +491,20 @@
                   </option>
                   <% } %>
                 </select>
-                <label for="take_person">Người nhận</label>
+                <label for="take_person_edit">Người nhận</label>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-floating">
-                <select
+                <input
+                  type="text"
+                  class="form-control"
                   id="sign_person_edit"
                   name="nguoi_ky_vb"
-                  class="form-select"
-                  aria-placeholder="Người nhận"
-                >
-                  <% for ( var i = 0; i < listUser.length; i++ ) { %>
-                  <option value="<%= listUser[i].fullname %>">
-                    <%= listUser[i].fullname %>
-                  </option>
-                  <% } %>
-                </select>
-                <label for="sign_person">Người ký văn bản</label>
+                  placeholder=""
+                  required
+                />
+                <label for="sign_person_edit">Người ký văn bản</label>
               </div>
             </div>
             <div class="col-md-12">
@@ -526,7 +516,7 @@
                   </option>
                   <% } %>
                 </select>
-                <label for="status">Trạng thái</label>
+                <label for="status_edit">Trạng thái</label>
               </div>
               
             </div>
@@ -537,10 +527,9 @@
                   placeholder=""
                   id="note_edit"
                   name="ghi_chu"
-                  required
                   style="height: 100px"
                 ></textarea>
-                <label for="note">Ghi chú</label>
+                <label for="note_edit">Ghi chú</label>
               </div>
             </div>
 

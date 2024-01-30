@@ -24,6 +24,7 @@ router.get('/detail-document/:id', homeController.detailDocument);
 router.post('/create-documentCome', homeController.createDocumentCome);
 router.post('/create-documentGo', homeController.createDocumentGo);
 router.post('/edit-documentCome', homeController.editDocumentCome);
+router.post('/edit-documentGo', homeController.editDocumentGo);
 router.delete('/delete-document/:id', homeController.deleteDocument);
 router.get('/detail-document-edit/:id', homeController.getDetailDocumentForUpdate);
 

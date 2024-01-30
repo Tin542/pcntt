@@ -17,7 +17,7 @@ function HomeController() {
 
   // Lay tat ca dang van ban
   const listDocType = async (req) => {
-    const LVBQuery = `SELECT ma_dvb, ten_dvb FROM DANG_VB WHERE status = 'True'`;
+    const LVBQuery = `SELECT ma_dvb, ten_dvb FROM DANG_VB WHERE status = 'True' ORDER BY ten_dvb ASC`;
     return (await db(req).query(LVBQuery)).recordset;
   };
 
@@ -29,7 +29,7 @@ function HomeController() {
 
   // Ly tat ca user
   const listUser = async (req) => {
-    const UQuery = `SELECT username, fullname FROM USERS WHERE status = 'True'`;
+    const UQuery = `SELECT username, fullname FROM USERS WHERE status = 'True' ORDER BY createdate DESC`;
     return (await db(req).query(UQuery)).recordset;
   }
 
@@ -334,7 +334,7 @@ function HomeController() {
           {name: 'nguoi_ky_vb', value: createValue.nguoi_ky_vb},
           {name: 'trang_thai', value: createValue.trang_thai},//
           {name: 'status', value: 'True'},
-          {name: 'ghi_chu', value: createValue.ghi_chu},
+          {name: 'ghi_chu', value: createValue.ghi_chu ? createValue.ghi_chu : ''},
           {name: 'createdate', value: new Date()},
           {name: 'createdby', value: 'nguyenthanhtin@pnt.edu.vn'},
           {name: 'modifydate', value: new Date()},
@@ -492,6 +492,36 @@ function HomeController() {
         ];
         const result = (await db(req).query(query, inputs)).rowsAffected;
         if (result > 0) {
+          res.redirect("/home/list-documentGo");
+        }
+        db(req).close();
+      } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+      }
+    },
+    editDocumentGo: async (req, res) => {
+      try {
+        let editValue = req.body;
+        const query = `UPDATE VAN_BAN SET so_vb=@sovb, ma_dvb=@madvb, noi_dung=@noidung, dv_phat_hanh=@dvphathanh, nguoi_lh=@nguoilh, dien_thoai=@dienthoai, nguoi_nhan=@nguoinhan, nguoi_ky_vb=@nguoikyvb, trang_thai=@trangthai, ghi_chu=@ghichu, modifyby=@modifyBy, modifydate=@modifyDate, file_name=@fileName WHERE id=@Id`;
+        const inputs = [
+          {name: 'sovb', value: editValue.so_vb},
+          {name: 'madvb', value: editValue.ma_dvb},//
+          {name: 'noidung', value: editValue.noi_dung},
+          {name: 'dvphathanh', value: editValue.dv_phat_hanh},//
+          {name: 'nguoilh', value: editValue.nguoi_lh},
+          {name: 'dienthoai', value: editValue.dien_thoai},
+          {name: 'nguoinhan', value: editValue.nguoi_nhan},//
+          {name: 'nguoikyvb', value: editValue.nguoi_ky_vb},
+          {name: 'trangthai', value: editValue.trang_thai},//
+          {name: 'ghichu', value: editValue.ghi_chu},
+          {name: 'modifydate', value: new Date()},
+          {name: 'modifyby', value: 'nguyenthanhtin@pnt.edu.vn'},
+          {name: 'fileName', value: 'pdf'},
+          {name: 'Id', value: editValue.id},
+        ];
+        const result = (await db(req).query(query, inputs)).rowsAffected;
+        if (result) {
           res.redirect("/home/list-documentGo");
         }
         db(req).close();
