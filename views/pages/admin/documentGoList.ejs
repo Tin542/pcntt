@@ -20,22 +20,22 @@
         <div class="d-flex justify-content-between align-items-center">
           <div style="width: 250px;" class="p-2">
             <input
-              id="soVb"
-              name="soVb"
+              id="soVbSearch"
+              name="soVbSearch"
               type="text"
               class="form-control"
               placeholder="Số văn bản"
-              value="<%= filters.soVb %>"
+              value="<%= filters.soVbSearch %>"
           />
           </div>
           <div style="width: 250px;" class="p-2">
             
-            <select id="loaivb" name="loaivb" class="form-select">
+            <select id="loaivbSearch" name="loaivbSearch" class="form-select">
               <option hidden value="">-Dạng Văn bản-</option>
               <%
               for ( var i = 0; i < listDocType.length; i++ )
               {
-                  var selected = ( listDocType[i].ma_dvb === filters.loaivb ) ? "selected" : "";
+                  var selected = ( listDocType[i].ma_dvb === filters.loaivbSearch ) ? "selected" : "";
                   
                   %><option value="<%= listDocType[i].ma_dvb %>" <%= selected %>><%= listDocType[i].ten_dvb %></option><%
               }
@@ -44,13 +44,13 @@
           </div>
           <div style="width: 250px;" class="p-2">
             
-            <select id="donvi" name="donvi" class="form-select">
+            <select id="donviSearch" name="donviSearch" class="form-select">
               <label for="exampleDataList" class="form-label">Datalist example</label>
               <option hidden value="">-Đơn vị nhận-</option>
               <%
               for ( var i = 0; i < listDepartment.length; i++ )
               {
-                  var selected = ( listDepartment[i].ma_dv === filters.donvi ) ? "selected" : "";
+                  var selected = ( listDepartment[i].ma_dv === filters.donviSearch ) ? "selected" : "";
                   
                   %><option value="<%= listDepartment[i].ma_dv %>" <%= selected %>><%= listDepartment[i].ten_dv %></option><%
               }
@@ -60,12 +60,12 @@
           
           <div style="width: 250px;" class="p-2">
             
-            <select id="trangthai" name="trangthai" class="form-select">
+            <select id="trangthaiSearch" name="trangthaiSearch" class="form-select">
               <option hidden value="">-Trạng thái-</option>
               <%
               for ( var i = 0; i < listStatus.length; i++ )
               {
-                  var selected = ( listStatus[i].ma_tt === filters.trangthai ) ? "selected" : "";
+                  var selected = ( listStatus[i].ma_tt === filters.trangthaiSearch ) ? "selected" : "";
                   
                   %><option value="<%= listStatus[i].ma_tt %>" <%= selected %>><%= listStatus[i].ten_tt %></option><%
               }
@@ -89,15 +89,14 @@
     <table class="table table-bordered bg-white mt-3">
       <thead>
         <tr>
-          <th scope="col">Id</th>
-          <th scope="col">Ngày tạo</th>
-          <th scope="col">Số văn bản</th>
-          <th scope="col">Loại văn bản</th>
-          <th scope="col">Người liên hệ</th>
+          <th scope="col" style="width: 100px;">Id</th>
+          <th scope="col" style="width: 178px;">Ngày gửi</th>
+          <th scope="col" style="width: 100px;">Số</th>
+          <th scope="col" style="width: 150px;">Dạng văn bản</th>
+          <th scope="col" style="width: 250px;">Người liên hệ</th>
           <th scope="col">Đơn vị nhận</th>
-          <th scope="col">Người nhận</th>
-          <th scope="col">Trạng thái</th>
-          <!-- <th scope="col">Thao tác</th> -->
+          <th scope="col" style="width: 250px;">Người nhận</th>
+          <th scope="col" style="width: 130px;">Trạng thái</th>
         </tr>
       </thead>
       <tbody>
@@ -151,10 +150,10 @@
         <li class="page-item <%= isActived %>">
           <form action="/home/list-documentGo" method="post">
             <input type="hidden" name="page" value="<%= i %>"/>
-            <input type="hidden" name="soVb" value="<%= filters.soVb %>"/>
-            <input type="hidden" name="loaivb" value="<%= filters.loaivb %>"/>
-            <input type="hidden" name="donvi" value="<%= filters.donvi %>"/>
-            <input type="hidden" name="trangthai" value="<%= filters.trangthai %>"/>
+            <input type="hidden" name="soVbSearch" value="<%= filters.soVbSearch %>"/>
+            <input type="hidden" name="loaivbSearch" value="<%= filters.loaivbSearch %>"/>
+            <input type="hidden" name="donviSearch" value="<%= filters.donviSearch %>"/>
+            <input type="hidden" name="trangthaiv" value="<%= filters.trangthaiSearch %>"/>
             <button type="submit" class="btn btn-link page-link"><%= i %></button>
           </form>
         </li>
@@ -182,98 +181,196 @@
     </div>
     <% } %>
     <div
-      class="modal fade"
-      id="createModal"
-      tabindex="-1"
-      aria-labelledby="createModal"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="createModal">Thêm Van ban</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <form class="row g-3" action="/" method="post">
-              <div class="col-md-12">
-              
-                <input
-                  type="text"
-                  class="form-control"
-                  id="fullname"
-                  name="fullname"
-                  placeholder="Nhập Họ tên"
-                  required
-                />
-              </div>
-              <div class="col-md-12">
-               
-                <input
-                  type="text"
-                  class="form-control"
-                  id="username"
-                  name="username"
-                  placeholder="Nhập Tên tài khoản"
-                  required
-                />
-              </div>
-              <div class="col-md-12">
-                
-                <input
-                  type="email"
-                  class="form-control"
-                  id="email"
-                  name="email"
-                  placeholder="Nhập Email"
-                  required
-                />
-              </div>
-              <div class="col-md-12">
-                
+    class="modal fade"
+    id="createModal"
+    tabindex="-1"
+    aria-labelledby="createModal"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createModal">Thêm Văn bản đi</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form
+            class="row g-3"
+            action="/home/create-documentGo"
+            method="post"
+          >
+            <div class="col-md-6">
+              <div class="form-floating">
                 <input
                   type="number"
                   class="form-control"
-                  id="phonenumber"
-                  name="phonenumber"
-                  placeholder="Nhập Số điện thoại"
+                  id="doc_number"
+                  name="so_vb"
+                  placeholder=""
                   required
                 />
+                <label for="doc_number">Số văn bản</label>
               </div>
-              <div class="col-md-12">
-             
-                <input
-                  type="password"
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <select
+                  id="doc_type_code"
+                  name="ma_dvb"
+                  class="form-select"
+                  aria-placeholder="Dạng văn bản"
+                >
+                  <% for ( var i = 0; i < listDocType.length; i++ ) { %>
+                  <option value="<%= listDocType[i].ma_dvb %>">
+                    <%= listDocType[i].ten_dvb %>
+                  </option>
+                  <% } %>
+                </select>
+                <label for="doc_type_code">Dạng văn bản</label>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-floating">
+                <textarea
                   class="form-control"
-                  id="password"
-                  name="password"
-                  placeholder="Nhập Mật khẩu"
+                  placeholder=""
+                  id="content"
+                  name="noi_dung"
+                  required
+                  style="height: 100px"
+                ></textarea>
+                <label for="content">Nội dung văn bản</label>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-floating">
+                <select
+                  id="department_sent"
+                  name="dv_nhan"
+                  class="form-select"
+                  aria-placeholder="Đơn vị nhận"
+                >
+                  <% for ( var i = 0; i < listDepartment.length; i++ ) { %>
+                  <option value="<%= listDepartment[i].ma_dv %>">
+                    <%= listDepartment[i].id %> - <%= listDepartment[i].ten_dv
+                    %>
+                  </option>
+                  <% } %>
+                </select>
+                <label for="department_sent">Đơn vị nhận</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating">
+                
+                <select
+                  id="contact"
+                  name="nguoi_lh"
+                  class="form-select"
+                  aria-placeholder="Người liên hệ"
+                >
+                  <% for ( var i = 0; i < listUser.length; i++ ) { %>
+                  <option value="<%= listUser[i].fullname %>">
+                    <%= listUser[i].fullname %>
+                  </option>
+                  <% } %>
+                </select>
+                <label for="contact">Người liên hệ</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="phone"
+                  name="dien_thoai"
+                  placeholder="Số điện thoại"
                   required
                 />
+                <label for="phone">Số điện thoại</label>
               </div>
-  
-              <div class="col-12">
-                <div class="modal-footer">
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    data-bs-dismiss="modal"
-                  >
-                    Đóng
-                  </button>
-                  <button type="submit" class="btn btn-primary">Thêm</button>
-                </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="take_person"
+                  name="nguoi_nhan"
+                  placeholder="Người liên hệ"
+                  required
+                />
+                <label for="take_person">Người nhận</label>
               </div>
-            </form>
-          </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating">
+                <select
+                  id="sign_person"
+                  name="nguoi_ky_vb"
+                  class="form-select"
+                  aria-placeholder="Người ký"
+                >
+                  <% for ( var i = 0; i < listUser.length; i++ ) { %>
+                  <option value="<%= listUser[i].fullname %>">
+                    <%= listUser[i].fullname %>
+                  </option>
+                  <% } %>
+                </select>
+                <label for="sign_person">Người ký văn bản</label>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-floating">
+                <select id="status" name="trang_thai" class="form-select">
+                  <% for ( var i = 0; i < listStatus.length; i++ ) { %>
+                  <option value="<%= listStatus[i].ma_tt %>">
+                    <%= listStatus[i].ten_tt %>
+                  </option>
+                  <% } %>
+                </select>
+                <label for="status">Trạng thái</label>
+              </div>
+              
+            </div>
+            <div class="col-md-12">
+              <div class="form-floating">
+                <textarea
+                  class="form-control"
+                  placeholder=""
+                  id="note"
+                  name="ghi_chu"
+                  required
+                  style="height: 100px"
+                ></textarea>
+                <label for="note">Ghi chú</label>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Đóng
+                </button>
+                <button type="submit" class="btn btn-primary">Thêm</button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>
+  </div>
     <div
       class="modal fade"
       id="editModal"

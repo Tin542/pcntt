@@ -43,13 +43,9 @@ app.use(function (req, res, next) {
 app.use("/home", home);
 app.use("/auth", auth);
 app.get("*", (req, res) => {
-  if (req.session.uid) {
-    res.redirect("/home/list-user");
-  } else {
-    res.render("pages/auth/login.ejs");
-  }
+  res.render("pages/auth/login.ejs");
 });
 
 app.listen(port, function () {
-  console.log("Node server running @ http://localhost:3000");
+  console.log(`Node server running on port: ${port}`);
 });

@@ -22,6 +22,7 @@ router.post('/list-documentCome', homeController.documentCome);// search / filer
 router.post('/list-documentGo', homeController.documentGo);// search / filer
 router.get('/detail-document/:id', homeController.detailDocument);
 router.post('/create-documentCome', homeController.createDocumentCome);
+router.post('/create-documentGo', homeController.createDocumentGo);
 router.post('/edit-documentCome', homeController.editDocumentCome);
 router.delete('/delete-document/:id', homeController.deleteDocument);
 router.get('/detail-document-edit/:id', homeController.getDetailDocumentForUpdate);

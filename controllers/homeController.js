@@ -209,6 +209,33 @@ function HomeController() {
       }
     },
     // Document
+    detailDocument: async (req, res) => {
+      try {
+        let did = req.params.id;
+
+        let resultDV = await listDepartment(req);
+        let resultLVB = await listDocType(req);
+        let resultTT = await listStatus(req);
+
+        const query = "SELECT * FROM VAN_BAN WHERE id = @Id";
+        const inputs = [{ name: "Id", value: parseInt(did) }];
+        const result = (await db(req).query(query, inputs)).recordset;
+
+        return res.render("pages/admin/adminPage", {
+          users: null,
+          documentCome: null,
+          documentGo: null,
+          listDepartment: resultDV,
+          listDocType: resultLVB,
+          listStatus: resultTT,
+          detailDocument: result[0],
+          path: pathname(req),
+        });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+      }
+    },
     documentCome: async (req, res) => {
       try {
         let params = req.body;
@@ -276,33 +303,6 @@ function HomeController() {
         res.status(500).json(error);
       }
     },
-    detailDocument: async (req, res) => {
-      try {
-        let did = req.params.id;
-
-        let resultDV = await listDepartment(req);
-        let resultLVB = await listDocType(req);
-        let resultTT = await listStatus(req);
-
-        const query = "SELECT * FROM VAN_BAN WHERE id = @Id";
-        const inputs = [{ name: "Id", value: parseInt(did) }];
-        const result = (await db(req).query(query, inputs)).recordset;
-
-        return res.render("pages/admin/adminPage", {
-          users: null,
-          documentCome: null,
-          documentGo: null,
-          listDepartment: resultDV,
-          listDocType: resultLVB,
-          listStatus: resultTT,
-          detailDocument: result[0],
-          path: pathname(req),
-        });
-      } catch (error) {
-        console.log(error);
-        res.status(500).json(error);
-      }
-    },
     getDetailDocumentForUpdate: async (req, res) => {
       try {
         let did = req.params.id;
@@ -310,71 +310,6 @@ function HomeController() {
         const inputs = [{ name: "Id", value: parseInt(did) }];
         const result = (await db(req).query(query, inputs)).recordset;
         return res.json({ s: 200, data: result[0] });
-      } catch (error) {
-        console.log(error);
-        res.status(500).json(error);
-      }
-    },
-    documentGo: async (req, res) => {
-      try {
-        let params = req.body;
-        let soVb = params.soVb ? params.soVb : "";
-        let loaivb = params.loaivb ? params.loaivb : "";
-        let donvi = params.donvi ? params.donvi : "";
-        let trangthai = params.trangthai ? params.trangthai : "";
-
-        let ItemsPerPage = 10;
-        let currentPage = params.page ? parseInt(params.page) : 1;
-
-        let resultDV = await listDepartment(req);
-        let resultLVB = await listDocType(req);
-        let resultTT = await listStatus(req);
-
-        // lay Tat ca van ban den
-        const query = `SELECT id, so_vb, ngay_tao, ma_dvb, nguoi_lh, dv_nhan, nguoi_nhan, trang_thai FROM VAN_BAN WHERE so_vb like '%${soVb}%' and loai_vb='CVDI' and ma_dvb like '%${loaivb}%' and dv_nhan like '%${donvi}%' and trang_thai like '%${trangthai}%' ORDER BY createdate DESC OFFSET ${
-          (currentPage - 1) * 5
-        } ROWS FETCH NEXT ${ItemsPerPage} ROWS ONLY`;
-        const queryForPagination = `SELECT id, so_vb, ngay_tao, ma_dvb, nguoi_lh, dv_nhan, nguoi_nhan, trang_thai FROM VAN_BAN WHERE so_vb like '%${soVb}%' and loai_vb='CVDI' and ma_dvb like '%${loaivb}%' and dv_nhan like '%${donvi}%' and trang_thai like '%${trangthai}%' ORDER BY createdate DESC`;
-        const result = (await db(req).query(query)).recordset;
-        const pagination = (await db(req).query(queryForPagination)).recordset;
-        let totalPage =
-          pagination.length % ItemsPerPage !== 0
-            ? Math.floor(pagination.length / ItemsPerPage) + 1
-            : pagination.length / ItemsPerPage;
-
-        result.forEach((e) => {
-          e.ngay_tao = moment(e.ngay_tao).format("LL");
-          e.donvi = resultDV.find(
-            (element) => element.ma_dv === e.dv_nhan
-          ).ten_dv;
-          e.dangVB = resultLVB.find(
-            (element) => element.ma_dvb === e.ma_dvb
-          ).ten_dvb;
-          e.trang_thai = resultTT.find(
-            (element) => element.ma_tt === e.trang_thai
-          ).ten_tt;
-        });
-
-        db(req).close();
-
-        return res.render("pages/admin/adminPage", {
-          users: null,
-          documentCome: null,
-          documentGo: result,
-          totalPage: totalPage,
-          currentPage: currentPage,
-          listDepartment: resultDV,
-          listDocType: resultLVB,
-          listStatus: resultTT,
-          filters: {
-            soVb: soVb,
-            loaivb: loaivb,
-            donvi: donvi,
-            trangthai: trangthai,
-          },
-          detailDocument: null,
-          path: pathname(req),
-        });
       } catch (error) {
         console.log(error);
         res.status(500).json(error);
@@ -455,6 +390,109 @@ function HomeController() {
         const result = (await db(req).query(query, inputs)).rowsAffected;
         if (result) {
           res.redirect("/home/list-documentCome");
+        }
+        db(req).close();
+      } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+      }
+    },
+    documentGo: async (req, res) => {
+      try {
+        let params = req.body;
+        let soVb = params.soVbSearch ? params.soVbSearch : "";
+        let loaivb = params.loaivbSearch ? params.loaivbSearch : "";
+        let donvi = params.donviSearch ? params.donviSearch : "";
+        let trangthai= params.trangthaiSearch ? params.trangthaiSearch : "";
+
+        let ItemsPerPage = 10;
+        let currentPage = params.page ? parseInt(params.page) : 1;
+
+        let resultDV = await listDepartment(req);
+        let resultLVB = await listDocType(req);
+        let resultTT = await listStatus(req);
+        let resultUser = await listUser(req);
+
+        // lay Tat ca van ban di
+        const query = `SELECT id, so_vb, ngay_tao, ma_dvb, nguoi_lh, dv_nhan, nguoi_nhan, trang_thai FROM VAN_BAN WHERE so_vb like '%${soVb}%' and loai_vb='CVDI' and ma_dvb like '%${loaivb}%' and dv_nhan like '%${donvi}%' and trang_thai like '%${trangthai}%' ORDER BY createdate DESC OFFSET ${
+          (currentPage - 1) * 5
+        } ROWS FETCH NEXT ${ItemsPerPage} ROWS ONLY`;
+        const queryForPagination = `SELECT id, so_vb, ngay_tao, ma_dvb, nguoi_lh, dv_nhan, nguoi_nhan, trang_thai FROM VAN_BAN WHERE so_vb like '%${soVb}%' and loai_vb='CVDI' and ma_dvb like '%${loaivb}%' and dv_nhan like '%${donvi}%' and trang_thai like '%${trangthai}%' ORDER BY createdate DESC`;
+        const result = (await db(req).query(query)).recordset;
+        const pagination = (await db(req).query(queryForPagination)).recordset;
+        let totalPage =
+          pagination.length % ItemsPerPage !== 0
+            ? Math.floor(pagination.length / ItemsPerPage) + 1
+            : pagination.length / ItemsPerPage;
+
+        result.forEach((e) => {
+          e.ngay_tao = moment(e.ngay_tao).format("LL");
+          e.donvi = resultDV.find(
+            (element) => element.ma_dv === e.dv_nhan
+          ).ten_dv;
+          e.dangVB = resultLVB.find(
+            (element) => element.ma_dvb === e.ma_dvb
+          ).ten_dvb;
+          e.trang_thai = resultTT.find(
+            (element) => element.ma_tt === e.trang_thai
+          ).ten_tt;
+        });
+
+        db(req).close();
+
+        return res.render("pages/admin/adminPage", {
+          users: null,
+          documentCome: null,
+          documentGo: result,
+          totalPage: totalPage,
+          currentPage: currentPage,
+          listDepartment: resultDV,
+          listDocType: resultLVB,
+          listStatus: resultTT,
+          listUser: resultUser,
+          filters: {
+            soVbSearch: soVb,
+            loaivbSearch: loaivb,
+            donviSearch: donvi,
+            trangthaiSearch: trangthai,
+          },
+          detailDocument: null,
+          path: pathname(req),
+        });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+      }
+    },
+    createDocumentGo: async (req, res) => {
+      try {
+        let createValue = req.body;
+        const query = `INSERT INTO VAN_BAN (so_vb, ngay_tao, loai_vb, ma_dvb, noi_dung, dv_phat_hanh, nguoi_lh, dien_thoai, dv_nhan, nguoi_nhan, nguoi_ky_vb, trang_thai, status, ghi_chu, createdate, createby, modifydate, modifyby, file_name)
+        VALUES ( @so_vb, @ngay_tao, @loai_vb, @ma_dvb, @noi_dung, @dv_phat_hanh, @nguoi_lh, @dien_thoai, @dv_nhan, @nguoi_nhan, @nguoi_ky_vb, @trang_thai, @status, @ghi_chu, @createdate, @createdby, @modifydate, @modifyby, @file_name)`;
+        const inputs = [
+          {name: 'so_vb', value: createValue.so_vb},
+          {name: 'ngay_tao', value: new Date()},
+          {name: 'loai_vb', value: 'CVDI'},
+          {name: 'ma_dvb', value: createValue.ma_dvb},//
+          {name: 'noi_dung', value: createValue.noi_dung},
+          {name: 'dv_phat_hanh', value: 'DM_BP1501000000043'},// default Phòng Công nghệ Thông tin
+          {name: 'nguoi_lh', value: createValue.nguoi_lh},
+          {name: 'dien_thoai', value: createValue.dien_thoai},
+          {name: 'dv_nhan', value: createValue.dv_nhan},
+          {name: 'nguoi_nhan', value: createValue.nguoi_nhan},//
+          {name: 'nguoi_ky_vb', value: createValue.nguoi_ky_vb},
+          {name: 'trang_thai', value: createValue.trang_thai},//
+          {name: 'status', value: 'True'},
+          {name: 'ghi_chu', value: createValue.ghi_chu},
+          {name: 'createdate', value: new Date()},
+          {name: 'createdby', value: 'nguyenthanhtin@pnt.edu.vn'},
+          {name: 'modifydate', value: new Date()},
+          {name: 'modifyby', value: 'nguyenthanhtin@pnt.edu.vn'},
+          {name: 'file_name', value: 'pdf'},
+        ];
+        const result = (await db(req).query(query, inputs)).rowsAffected;
+        if (result > 0) {
+          res.redirect("/home/list-documentGo");
         }
         db(req).close();
       } catch (error) {
