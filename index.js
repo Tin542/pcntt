@@ -10,7 +10,7 @@ const getDataConfig = require("./database/data.config");
 const { dataAccess } = require("./database/data.access");
 const home = require("./routes/home");
 const admin = require("./routes/admin");
-const auth = require("./routes/auth");
+const auth = require("./auth/auth.routes");
 
 const dataConfig = getDataConfig();
 const port = process.env.PORT;

@@ -15,7 +15,6 @@ exports.isAdmin = async (req, res, next) => {
   return next();
 };
 exports.isLogin = async (req, res, next) => {
-  // Lấy access token từ header
   const currentUser = req.session.user;
   if (!currentUser) {
     return res.redirect("/auth/login");
