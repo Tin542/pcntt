@@ -26,39 +26,11 @@
     </div>
 
     <script>
-      function cancelOrder(oid) {
-        $.ajax({
-          type: "POST",
-          data: {
-            orderId: oid,
-          },
-          url: `/admin/order/cancel`,
-          success: function (rs) {
-            alert("Hủy đơn hàng thành công");
-            window.location.reload();
-          },
-        });
-      }
       function onClickResetDocumentCome() {
         document.getElementById("loaivbSearch").value = "";
         document.getElementById("donviSearch").value = "";
         document.getElementById("trangthaiSearch").value = "";
         document.getElementById("soVbSearch").value = "";
-      }
-      function onClickResetPromotion() {
-        document.getElementById("scode").value = "";
-        document.getElementById("sname").value = "";
-        document.getElementById("status").value = "";
-      }
-      function onClickReset() {
-        document.getElementById("idSearch").value = "";
-        document.getElementById("status").value = "";
-        document.getElementById("paid").value = "";
-      }
-      function onClickResetProduct() {
-        document.getElementById("pName").value = "";
-        document.getElementById("category").value = "";
-        document.getElementById("star").value = "";
       }
       function onClickResetUser() {
         document.getElementById("username").value = "";
@@ -106,8 +78,13 @@
             userId: id,
           },
           success: function (rs) {
-            alert("Đã khóa tài khoản");
-            window.location.reload();
+            if(rs.s === 200){
+              alert(rs.msg);
+              window.location.reload();
+            } 
+            if (rs.s === 403) {
+              alert(rs.msg);
+            }
           },
         });
       }
@@ -119,8 +96,14 @@
             userId: id,
           },
           success: function (rs) {
-            alert("tài khoản đã được khôi phục với mật khẩu: 123456");
-            window.location.reload();
+            if(rs.s === 200){
+              alert(rs.msg);
+              window.location.reload();
+            } 
+            if (rs.s === 403) {
+              alert(rs.msg);
+            }
+            
           },
         });
       }
@@ -139,121 +122,9 @@
               document.getElementById("phonenumberEdit").value =
                 data.phonenumber;
             }
-          },
-        });
-      }
-      function editPromotion(id) {
-        console.log("id: ", id);
-        $.ajax({
-          type: "GET",
-          url: `/admin/promotion/detail/${id}`,
-          success: function (rs) {
-            if (rs.s === 200) {
-              let data = rs.data;
-              // set data vừa get đc lên <input>
-              document.getElementById("_idEdit").value = data._id;
-              document.getElementById("codeEdit").value = data.code;
-              document.getElementById("nameEdit").value = data.name;
-              document.getElementById("GiamGiaEdit").value = data.GiamGia;
-              document.getElementById("startDateEdit").value = data.startDate;
-              document.getElementById("endDateEdit").value = data.endDate;
-              document.getElementById("descEdit").value = data.desc;
+            if (rs.s === 403) {
+              alert(rs.msg);
             }
-          },
-        });
-      }
-      function editcategory(id) {
-        $.ajax({
-          type: "GET",
-          url: `/admin/category/detail/${id}`,
-          success: function (rs) {
-            if (rs.s === 200) {
-              let data = rs.data;
-
-              // set data vừa get đc lên <input>
-              document.getElementById("nameEdit").value = data?.name;
-              document.getElementById("_idEdit").value = data?._id;
-            }
-          },
-        });
-      }
-      function deleteItem(id) {
-        $.ajax({
-          type: "DELETE",
-          url: `/admin/products/delete/${id}`,
-          success: function (rs) {
-            alert("delete success");
-            window.location.reload();
-          },
-        });
-      }
-      function deletecategory(id) {
-        $.ajax({
-          type: "DELETE",
-          url: `/admin/category/delete/${id}`,
-          success: function (rs) {
-            alert("delete success");
-            window.location.reload();
-          },
-        });
-      }
-      function deletePromotion(id) {
-        $.ajax({
-          type: "DELETE",
-          url: `/admin/promotion/delete/${id}`,
-          success: function (rs) {
-            alert("delete success");
-            window.location.reload();
-          },
-        });
-      }
-      function uploadImage() {
-        var fileInput = document.getElementById("image_file");
-        var file = fileInput.files[0];
-        if (!file) {
-          return alert("Vui lòng chọn ảnh");
-        }
-        var formData = new FormData();
-        formData.append("file", file);
-
-        $.ajax({
-          url: "/admin/products/upload-image",
-          type: "POST",
-          data: formData,
-          processData: false,
-          contentType: false,
-          success: function (response) {
-            document.getElementById("imageUpload").src = response.urlUploaded;
-            document.getElementById("imageUrl").value = response.urlUploaded;
-          },
-          error: function (xhr, status, error) {
-            // Xử lý lỗi
-          },
-        });
-      }
-      function uploadImageForEdit() {
-        var fileInput = document.getElementById("image_file_edit");
-        var file = fileInput.files[0];
-        if (!file) {
-          return alert("Vui lòng chọn ảnh");
-        }
-        var formData = new FormData();
-        formData.append("file", file);
-
-        $.ajax({
-          url: "/admin/products/upload-image",
-          type: "POST",
-          data: formData,
-          processData: false,
-          contentType: false,
-          success: function (response) {
-            document.getElementById("imageUploadEdit").src =
-              response.urlUploaded;
-            document.getElementById("imageUrlEdit").value =
-              response.urlUploaded;
-          },
-          error: function (xhr, status, error) {
-            // Xử lý lỗi
           },
         });
       }

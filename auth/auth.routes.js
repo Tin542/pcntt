@@ -23,17 +23,13 @@ router.get("/reset", (req, res) => {
 router.get("/verify-email", (req, res) => {
   res.render("pages/auth/verifyEmailForReset.ejs", { isShowed: false });
 });
-router.get('/logout', authController.logout);
+
 router.get("/403", (req, res) => {
   res.render("pages/403Page.ejs");
 });
 
 // Controllers Routes
-router.post("/register", authController.register);
-router.post("/verify", authController.verify);
 router.post("/login", authController.login);
-router.post("/reset", authController.reset);
-router.post("/sendOTP", authController.sendOTP);
-router.post("/verify-otp", authController.verifyEmailForReset);
+router.get('/logout', authController.logout);
 
 module.exports = router;

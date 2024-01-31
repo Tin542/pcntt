@@ -1,37 +1,32 @@
 const express = require("express");
 const homeController = require("../controllers/homeController");
-const authController = require("../controllers/authController");
-const authMiddleware = require("../auth/auth.middleware");
+const authController = require("../auth/auth.controller");
 const router = express.Router({});
 
-const isAdmin = authMiddleware.isAdmin;
-const isLogin = authMiddleware.isLogin;
-
+router.use(authController.checkLogin);
 //Dashboard
-router.get("/dashboard", isLogin, homeController.dashboard);
+router.get("/dashboard", homeController.dashboard);
 //User
-router.get("/list-user", isLogin, homeController.user);
-router.post("/list-user", isLogin, homeController.user); // search / filter
-router.post("/create-user", isAdmin, homeController.createUser);
-router.get("/detail-user/:id", isAdmin, homeController.getDetailUser);
-router.post("/edit-user", isAdmin, homeController.editUser);
-router.post("/delete-user", isAdmin, homeController.deleteUser);
-router.post("/restore-user", isAdmin, homeController.restoreUser);
-router.post("/reset-password", isAdmin, homeController.resetPassword);
+router.get("/list-user", homeController.user);
+router.post("/list-user", homeController.user); // search / filter
+router.post("/create-user", homeController.createUser);
+router.get("/detail-user/:id", homeController.getDetailUser);
+router.post("/edit-user", homeController.editUser);
+router.post("/delete-user", homeController.deleteUser);
+router.post("/reset-password", homeController.resetPassword);
 //Document
-router.get("/list-documentCome", isLogin, homeController.documentCome);
-router.get("/list-documentGo", isLogin, homeController.documentGo);
-router.post("/list-documentCome", isLogin, homeController.documentCome); // search / filer
-router.post("/list-documentGo", isLogin, homeController.documentGo); // search / filer
-router.get("/detail-document/:id", isLogin, homeController.detailDocument);
-router.post("/create-documentCome", isLogin, homeController.createDocumentCome);
-router.post("/create-documentGo", isLogin, homeController.createDocumentGo);
-router.post("/edit-documentCome", isLogin, homeController.editDocumentCome);
-router.post("/edit-documentGo", isLogin, homeController.editDocumentGo);
-router.delete("/delete-document/:id", isLogin, homeController.deleteDocument);
+router.get("/list-documentCome", homeController.documentCome);
+router.get("/list-documentGo", homeController.documentGo);
+router.post("/list-documentCome", homeController.documentCome); // search / filer
+router.post("/list-documentGo", homeController.documentGo); // search / filer
+router.get("/detail-document/:id", homeController.detailDocument);
+router.post("/create-documentCome", homeController.createDocumentCome);
+router.post("/create-documentGo", homeController.createDocumentGo);
+router.post("/edit-documentCome", homeController.editDocumentCome);
+router.post("/edit-documentGo", homeController.editDocumentGo);
+router.delete("/delete-document/:id", homeController.deleteDocument);
 router.get(
   "/detail-document-edit/:id",
-  isLogin,
   homeController.getDetailDocumentForUpdate
 );
 

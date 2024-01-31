@@ -5,10 +5,25 @@ const { elements } = require("chart.js");
 require("dotenv").config();
 
 function HomeController() {
-  const db = (req) => req.app.locals.db.pcntt;// get database services
+  const db = (req) => req.app.locals.db.pcntt; // get database services
   const pathname = (req) => (req.app.locals.pathname = req.path); // get current path
   const currentUser = (req) => req.session.user; // get current user
   moment.locale("vi"); // set langauge to Vietnamese for datetime
+
+  // kiem tra quyen user
+  const checkAuthorization = async (req) => {
+    let isAllowed = false;
+    const currentUser = req.session.user;
+    if (!currentUser) {
+      return res.redirect("/auth/login");
+    }
+    const checkAuthorQuery = `SELECT * FROM QUYEN WHERE user_id = '${currentUser.id}'`;
+    const checkAuthorresult = (await db(req).query(checkAuthorQuery)).recordset;
+    if (checkAuthorresult.length > 0) {
+      isAllowed = true;
+    }
+    return isAllowed;
+  };
 
   // Lay tat ca don vi
   const listDepartment = async (req) => {
@@ -32,7 +47,7 @@ function HomeController() {
   const listUser = async (req) => {
     const UQuery = `SELECT username, fullname FROM USERS WHERE status = 'True' ORDER BY createdate DESC`;
     return (await db(req).query(UQuery)).recordset;
-  }
+  };
 
   return {
     dashboard: async (req, res) => {
@@ -101,7 +116,10 @@ function HomeController() {
     },
     createUser: async (req, res) => {
       try {
-        
+        const isAllowed = await checkAuthorization(req);
+        if(!isAllowed) {
+          return res.status(403).json({s: 403, msg: 'Bạn không có quyền sử dụng chức năng này !'});
+        }
         let createValue = req.body;
         const enCryptedPassword = sha256(createValue?.password);
         const query = `INSERT INTO USERS (fullname, username, email, phonenumber, password, perid, status, createdate) VALUES (@Fullname, @Username, @Email, @Phonenumber, @Password, @Perid, @Status, @CreateDate)`;
@@ -127,6 +145,10 @@ function HomeController() {
     },
     getDetailUser: async (req, res) => {
       try {
+        const isAllowed = await checkAuthorization(req);
+        if(!isAllowed) {
+          return res.status(403).json({s: 403, msg: 'Bạn không có quyền sử dụng chức năng này !'});
+        }
         let uid = req.params.id;
         const query = "SELECT * FROM USERS WHERE id = @Id";
         const inputs = [{ name: "Id", value: parseInt(uid) }];
@@ -142,6 +164,10 @@ function HomeController() {
     },
     editUser: async (req, res) => {
       try {
+        const isAllowed = await checkAuthorization(req);
+        if(!isAllowed) {
+          return res.redirect('/auth/403');
+        }
         let editData = req.body;
         const query = `UPDATE USERS SET fullname = @Fullname, username = @Username, email = @Email, phonenumber = @phonenumber WHERE id = @Id`;
         const inputs = [
@@ -162,30 +188,20 @@ function HomeController() {
     },
     deleteUser: async (req, res) => {
       try {
+        const isAllowed = await checkAuthorization(req);
+        if(!isAllowed) {
+          return res.status(403).json({s: 403, msg: 'Bạn không có quyền sử dụng chức năng này !'});
+        }
         let uid = req.body.userId;
         const query = `UPDATE USERS SET status = 'False' WHERE id = @Id`;
-        const inputs = [
-          { name: "Id", value: parseInt(uid) },
-        ];
+        const inputs = [{ name: "Id", value: parseInt(uid) }];
         const result = (await db(req).query(query, inputs)).rowsAffected;
         if (result) {
-          return res.redirect("/home/list-user");
-        }
-      } catch (error) {
-        console.log(error);
-        res.status(500).json(error);
-      }
-    },
-    restoreUser: async (req, res) => {
-      try {
-        let uid = req.body.userId;
-        const query = `UPDATE USERS SET status = 'True' WHERE id = @Id`;
-        const inputs = [
-          { name: "Id", value: parseInt(uid) },
-        ];
-        const result = (await db(req).query(query, inputs)).rowsAffected;
-        if (result) {
-          return res.redirect("/home/list-user");
+          return res.status(200)
+          .json({
+            s: 200,
+            msg: `Đã khóa tài khoản`,
+          });
         }
       } catch (error) {
         console.log(error);
@@ -194,6 +210,10 @@ function HomeController() {
     },
     resetPassword: async (req, res) => {
       try {
+        const isAllowed = await checkAuthorization(req);
+        if(!isAllowed) {
+          return res.status(403).json({s: 403, msg: 'Bạn không có quyền sử dụng chức năng này !'});
+        }
         let uid = parseInt(req.body.userId);
         const password = sha256(process.env.DEFAULT_PASSWORD);
         const query = `UPDATE USERS SET status = 'True', password = @Password WHERE id = @Id`;
@@ -203,7 +223,12 @@ function HomeController() {
         ];
         const result = (await db(req).query(query, inputs)).rowsAffected;
         if (result) {
-          return res.redirect("/home/list-user");
+          return res
+            .status(200)
+            .json({
+              s: 200,
+              msg: `Tài khoản đã được khôi phục với mật khẩu: ${process.env.DEFAULT_PASSWORD}`,
+            });
         }
       } catch (error) {
         console.log(error);
@@ -323,25 +348,28 @@ function HomeController() {
         const query = `INSERT INTO VAN_BAN (so_vb, ngay_tao, loai_vb, ma_dvb, noi_dung, dv_phat_hanh, nguoi_lh, dien_thoai, dv_nhan, nguoi_nhan, nguoi_ky_vb, trang_thai, status, ghi_chu, createdate, createby, modifydate, modifyby, file_name)
         VALUES ( @so_vb, @ngay_tao, @loai_vb, @ma_dvb, @noi_dung, @dv_phat_hanh, @nguoi_lh, @dien_thoai, @dv_nhan, @nguoi_nhan, @nguoi_ky_vb, @trang_thai, @status, @ghi_chu, @createdate, @createdby, @modifydate, @modifyby, @file_name)`;
         const inputs = [
-          {name: 'so_vb', value: createValue.so_vb},
-          {name: 'ngay_tao', value: new Date()},
-          {name: 'loai_vb', value: 'CVDEN'},
-          {name: 'ma_dvb', value: createValue.ma_dvb},//
-          {name: 'noi_dung', value: createValue.noi_dung},
-          {name: 'dv_phat_hanh', value: createValue.dv_phat_hanh},//
-          {name: 'nguoi_lh', value: createValue.nguoi_lh},
-          {name: 'dien_thoai', value: createValue.dien_thoai},
-          {name: 'dv_nhan', value: 'DM_BP1501000000043'},// default Phòng Công nghệ Thông tin
-          {name: 'nguoi_nhan', value: createValue.nguoi_nhan},//
-          {name: 'nguoi_ky_vb', value: createValue.nguoi_ky_vb},
-          {name: 'trang_thai', value: createValue.trang_thai},//
-          {name: 'status', value: 'True'},
-          {name: 'ghi_chu', value: createValue.ghi_chu ? createValue.ghi_chu : ''},
-          {name: 'createdate', value: new Date()},
-          {name: 'createdby', value: currentUser(req).username},
-          {name: 'modifydate', value: new Date()},
-          {name: 'modifyby', value: currentUser(req).username},
-          {name: 'file_name', value: 'pdf'},
+          { name: "so_vb", value: createValue.so_vb },
+          { name: "ngay_tao", value: new Date() },
+          { name: "loai_vb", value: "CVDEN" },
+          { name: "ma_dvb", value: createValue.ma_dvb }, //
+          { name: "noi_dung", value: createValue.noi_dung },
+          { name: "dv_phat_hanh", value: createValue.dv_phat_hanh }, //
+          { name: "nguoi_lh", value: createValue.nguoi_lh },
+          { name: "dien_thoai", value: createValue.dien_thoai },
+          { name: "dv_nhan", value: "DM_BP1501000000043" }, // default Phòng Công nghệ Thông tin
+          { name: "nguoi_nhan", value: createValue.nguoi_nhan }, //
+          { name: "nguoi_ky_vb", value: createValue.nguoi_ky_vb },
+          { name: "trang_thai", value: createValue.trang_thai }, //
+          { name: "status", value: "True" },
+          {
+            name: "ghi_chu",
+            value: createValue.ghi_chu ? createValue.ghi_chu : "",
+          },
+          { name: "createdate", value: new Date() },
+          { name: "createdby", value: currentUser(req).username },
+          { name: "modifydate", value: new Date() },
+          { name: "modifyby", value: currentUser(req).username },
+          { name: "file_name", value: "pdf" },
         ];
         const result = (await db(req).query(query, inputs)).rowsAffected;
         if (result) {
@@ -357,9 +385,7 @@ function HomeController() {
       try {
         let id = req.params.id;
         const DeleteQuery = `DELETE VAN_BAN WHERE id=@Id`;
-        const inputs = [
-          {name: 'Id', value: parseInt(id)}
-        ];
+        const inputs = [{ name: "Id", value: parseInt(id) }];
         const result = (await db(req).query(DeleteQuery, inputs)).rowsAffected;
         if (result) {
           res.json({ s: 200, msg: "Delete success!!" });
@@ -374,20 +400,20 @@ function HomeController() {
         let editValue = req.body;
         const query = `UPDATE VAN_BAN SET so_vb=@sovb, ma_dvb=@madvb, noi_dung=@noidung, dv_phat_hanh=@dvphathanh, nguoi_lh=@nguoilh, dien_thoai=@dienthoai, nguoi_nhan=@nguoinhan, nguoi_ky_vb=@nguoikyvb, trang_thai=@trangthai, ghi_chu=@ghichu, modifyby=@modifyBy, modifydate=@modifyDate, file_name=@fileName WHERE id=@Id`;
         const inputs = [
-          {name: 'sovb', value: editValue.so_vb},
-          {name: 'madvb', value: editValue.ma_dvb},//
-          {name: 'noidung', value: editValue.noi_dung},
-          {name: 'dvphathanh', value: editValue.dv_phat_hanh},//
-          {name: 'nguoilh', value: editValue.nguoi_lh},
-          {name: 'dienthoai', value: editValue.dien_thoai},
-          {name: 'nguoinhan', value: editValue.nguoi_nhan},//
-          {name: 'nguoikyvb', value: editValue.nguoi_ky_vb},
-          {name: 'trangthai', value: editValue.trang_thai},//
-          {name: 'ghichu', value: editValue.ghi_chu},
-          {name: 'modifydate', value: new Date()},
-          {name: 'modifyby', value: currentUser(req).username},
-          {name: 'fileName', value: 'pdf'},
-          {name: 'Id', value: editValue.id},
+          { name: "sovb", value: editValue.so_vb },
+          { name: "madvb", value: editValue.ma_dvb }, //
+          { name: "noidung", value: editValue.noi_dung },
+          { name: "dvphathanh", value: editValue.dv_phat_hanh }, //
+          { name: "nguoilh", value: editValue.nguoi_lh },
+          { name: "dienthoai", value: editValue.dien_thoai },
+          { name: "nguoinhan", value: editValue.nguoi_nhan }, //
+          { name: "nguoikyvb", value: editValue.nguoi_ky_vb },
+          { name: "trangthai", value: editValue.trang_thai }, //
+          { name: "ghichu", value: editValue.ghi_chu },
+          { name: "modifydate", value: new Date() },
+          { name: "modifyby", value: currentUser(req).username },
+          { name: "fileName", value: "pdf" },
+          { name: "Id", value: editValue.id },
         ];
         const result = (await db(req).query(query, inputs)).rowsAffected;
         if (result) {
@@ -405,7 +431,7 @@ function HomeController() {
         let soVb = params.soVbSearch ? params.soVbSearch : "";
         let loaivb = params.loaivbSearch ? params.loaivbSearch : "";
         let donvi = params.donviSearch ? params.donviSearch : "";
-        let trangthai= params.trangthaiSearch ? params.trangthaiSearch : "";
+        let trangthai = params.trangthaiSearch ? params.trangthaiSearch : "";
 
         let ItemsPerPage = 10;
         let currentPage = params.page ? parseInt(params.page) : 1;
@@ -473,25 +499,25 @@ function HomeController() {
         const query = `INSERT INTO VAN_BAN (so_vb, ngay_tao, loai_vb, ma_dvb, noi_dung, dv_phat_hanh, nguoi_lh, dien_thoai, dv_nhan, nguoi_nhan, nguoi_ky_vb, trang_thai, status, ghi_chu, createdate, createby, modifydate, modifyby, file_name)
         VALUES ( @so_vb, @ngay_tao, @loai_vb, @ma_dvb, @noi_dung, @dv_phat_hanh, @nguoi_lh, @dien_thoai, @dv_nhan, @nguoi_nhan, @nguoi_ky_vb, @trang_thai, @status, @ghi_chu, @createdate, @createdby, @modifydate, @modifyby, @file_name)`;
         const inputs = [
-          {name: 'so_vb', value: createValue.so_vb},
-          {name: 'ngay_tao', value: new Date()},
-          {name: 'loai_vb', value: 'CVDI'},
-          {name: 'ma_dvb', value: createValue.ma_dvb},//
-          {name: 'noi_dung', value: createValue.noi_dung},
-          {name: 'dv_phat_hanh', value: 'DM_BP1501000000043'},// default Phòng Công nghệ Thông tin
-          {name: 'nguoi_lh', value: createValue.nguoi_lh},
-          {name: 'dien_thoai', value: createValue.dien_thoai},
-          {name: 'dv_nhan', value: createValue.dv_nhan},
-          {name: 'nguoi_nhan', value: createValue.nguoi_nhan},//
-          {name: 'nguoi_ky_vb', value: createValue.nguoi_ky_vb},
-          {name: 'trang_thai', value: createValue.trang_thai},//
-          {name: 'status', value: 'True'},
-          {name: 'ghi_chu', value: createValue.ghi_chu},
-          {name: 'createdate', value: new Date()},
-          {name: 'createdby', value: currentUser(req).username},
-          {name: 'modifydate', value: new Date()},
-          {name: 'modifyby', value: currentUser(req).username},
-          {name: 'file_name', value: 'pdf'},
+          { name: "so_vb", value: createValue.so_vb },
+          { name: "ngay_tao", value: new Date() },
+          { name: "loai_vb", value: "CVDI" },
+          { name: "ma_dvb", value: createValue.ma_dvb }, //
+          { name: "noi_dung", value: createValue.noi_dung },
+          { name: "dv_phat_hanh", value: "DM_BP1501000000043" }, // default Phòng Công nghệ Thông tin
+          { name: "nguoi_lh", value: createValue.nguoi_lh },
+          { name: "dien_thoai", value: createValue.dien_thoai },
+          { name: "dv_nhan", value: createValue.dv_nhan },
+          { name: "nguoi_nhan", value: createValue.nguoi_nhan }, //
+          { name: "nguoi_ky_vb", value: createValue.nguoi_ky_vb },
+          { name: "trang_thai", value: createValue.trang_thai }, //
+          { name: "status", value: "True" },
+          { name: "ghi_chu", value: createValue.ghi_chu },
+          { name: "createdate", value: new Date() },
+          { name: "createdby", value: currentUser(req).username },
+          { name: "modifydate", value: new Date() },
+          { name: "modifyby", value: currentUser(req).username },
+          { name: "file_name", value: "pdf" },
         ];
         const result = (await db(req).query(query, inputs)).rowsAffected;
         if (result > 0) {
@@ -509,20 +535,20 @@ function HomeController() {
         let editValue = req.body;
         const query = `UPDATE VAN_BAN SET so_vb=@sovb, ma_dvb=@madvb, noi_dung=@noidung, dv_phat_hanh=@dvphathanh, nguoi_lh=@nguoilh, dien_thoai=@dienthoai, nguoi_nhan=@nguoinhan, nguoi_ky_vb=@nguoikyvb, trang_thai=@trangthai, ghi_chu=@ghichu, modifyby=@modifyBy, modifydate=@modifyDate, file_name=@fileName WHERE id=@Id`;
         const inputs = [
-          {name: 'sovb', value: editValue.so_vb},
-          {name: 'madvb', value: editValue.ma_dvb},//
-          {name: 'noidung', value: editValue.noi_dung},
-          {name: 'dvphathanh', value: editValue.dv_phat_hanh},//
-          {name: 'nguoilh', value: editValue.nguoi_lh},
-          {name: 'dienthoai', value: editValue.dien_thoai},
-          {name: 'nguoinhan', value: editValue.nguoi_nhan},//
-          {name: 'nguoikyvb', value: editValue.nguoi_ky_vb},
-          {name: 'trangthai', value: editValue.trang_thai},//
-          {name: 'ghichu', value: editValue.ghi_chu},
-          {name: 'modifydate', value: new Date()},
-          {name: 'modifyby', value: currentUser(req).username},
-          {name: 'fileName', value: 'pdf'},
-          {name: 'Id', value: editValue.id},
+          { name: "sovb", value: editValue.so_vb },
+          { name: "madvb", value: editValue.ma_dvb }, //
+          { name: "noidung", value: editValue.noi_dung },
+          { name: "dvphathanh", value: editValue.dv_phat_hanh }, //
+          { name: "nguoilh", value: editValue.nguoi_lh },
+          { name: "dienthoai", value: editValue.dien_thoai },
+          { name: "nguoinhan", value: editValue.nguoi_nhan }, //
+          { name: "nguoikyvb", value: editValue.nguoi_ky_vb },
+          { name: "trangthai", value: editValue.trang_thai }, //
+          { name: "ghichu", value: editValue.ghi_chu },
+          { name: "modifydate", value: new Date() },
+          { name: "modifyby", value: currentUser(req).username },
+          { name: "fileName", value: "pdf" },
+          { name: "Id", value: editValue.id },
         ];
         const result = (await db(req).query(query, inputs)).rowsAffected;
         if (result) {
@@ -533,7 +559,7 @@ function HomeController() {
         console.log(error);
         res.status(500).json(error);
       }
-    }
+    },
   };
 }
 
